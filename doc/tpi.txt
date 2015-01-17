@@ -1,0 +1,114 @@
+IPT - Internet Protocol for Things
+==================================
+
+Introdução:
+---------------
+	O IPT ou Internet Protocol for Things é um protocolo de comunicação criado
+pelo grupo de desenvolvimento WiserUFBA setor TatuDev, setor tal que tem por 
+objetivo a pesquisa e o desenvolvimento de hardware e software para embarcados.
+O IPT nasceu com a necessidade a padronização da comunicação entre dispositivos
+e serviços e por tal razão foi criado para ter o melhor desempenho tanto nos
+serviços como nas coisas, para tal o IPT trabalha com uma aplicação rodando na
+porta 171 e transmitindo pequenas mensagens as quais podem ser autenticadas através
+de um processo próprio de autenticação também desenvolvido por nós.
+	O IPT é uma das diretivas utilizadas na criação do ecossistema TATU 
+(Thing Accessibility Through Utilities) para o dispositivo de codinome UFBAINO.
+
+Funções:
+---------------
+	> GET
+	: Funcionamento
+		Requisição de informações de outra fonte ou controlador
+	: Propriedades
+		- ALL:  Retorna todas as informações presentes no controlador
+				Sem variaveis.
+		- INFO: Retorna uma informação especificada por parametro
+				<var> ? string.
+		- STATUS: Retorna o status de um pino
+				<var> ? pin_num/sensor_num/sensor_name.
+		- PROPERTY: Retorna uma propriedade do dispositivo
+				<var> ? property_name.
+	: Estrutura
+		=======================
+		GET <propriedade> <var>
+		=======================
+
+	> SET
+	: Funcionamento
+		Modifica uma informação em outro dispositivo
+	: Propriedades
+		- STATUS: Modifica o estado de uma variavel
+				<var1> <valor1> ...
+		- INFO: Modifica uma string
+				<var1> <valor1> ...
+		- RETORNO: Indica a necessidade do retorno
+	: Estrutura
+		================================================================
+		SET <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
+		================================================================
+	
+	> POST
+	: Funcionamento
+		Retorno de uma requisição
+		O retorno de uma requisição é composto por um objeto JSON
+	: Estilo
+		O post é formado por dois objetos o HEADER e o BODY
+		O HEADER representa o cabeçalho da requisiçao e nele estarão contidas todas as propriedades
+		do dispositivo o qual está enviando as informações
+		O BODY representa todas as variaveis ou informações que foram requisitadas
+		- HEADER
+			<propriedade1>: <valor1>, ...
+		- BODY
+			<type1>: {<var1>: <valor1>, ...}, ...
+	: Estrutura
+		============================================================================================
+		POST {HEADER: { <propriedade1>: <valor1>, ...}, BODY:{<type1>: {<var1>: <valor1>, ...}, ...}  
+		============================================================================================
+
+	> EDIT
+	: Funcionamento
+		Modifica propriedades internas a um controlador
+	: Propriedades
+		- STATUS: Modifica o estado de uma variavel
+				<var1> <valor1> ...
+		- INFO: Modifica uma string
+				<var1> <valor1> ...
+		- RETORNO: Indica a necessidade do retorno
+  	: Estrutura
+		=================================================================
+		EDIT <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
+		=================================================================
+
+  	> CRYPTO
+  	: Funcionamento
+  		Indica a criptografia de uma informação e a necessidade da descriptografia
+  	: Estrutura
+  		==========================
+  		CRYPTO <encrypted_message>
+  		==========================
+
+  	> AUTH
+  	: Funcionamento
+  		Autentica e habilita a comunicação criptografada entre dois dispositivos
+  		O processo de autenticação é feita em 3 passos
+  		1º - Requisição de Chave Pública:
+  			AUTH REQUIRE  /** Requisita uma chave pública para o dispositivo ou serviço **/
+  		2º - Entrega da Chave Pública:
+  			AUTH PUBLIC <password> /** Retorna uma chave pública para o dispositivo ou serviço **/
+  		3º - Encriptação de dispositivo e senha:
+  			AUTH LOGIN <encrypted_object> /** Retorna um objeto de autenticação {LOGIN: { DEVICE: <name>, PASSWORD: <pass>}} **/
+  		E por último o sistema irá conferir e autenticar a comunicação
+  	: Propriedades
+  		- REQUIRE - Requisita uma chave pública para a comunicação
+  		- PUBLIC - Retorna a chave pública
+  		- LOGIN - Envia as informações para a autenticação
+  	: Estrutura
+  		=====================================
+  		AUTH <propriedade> <encrypted_object>
+  		=====================================
+
+	Obs.: Toda requisição acaba com um '\n'
+
+   **** Developed By The TatuDevGroup ****
+  **** From Wiser Corporation  -  UFBA **** 
+         **** Project Smart UFBA ****
