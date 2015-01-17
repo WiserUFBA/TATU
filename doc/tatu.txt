@@ -1,0 +1,15 @@
+========================================
+================= TATU =================
+========================================
+
+========================================
+TATU - (The Accessible Things Universe)
+	TOS - Thing Operating System
+	TPS - Thing Property Standard
+	TPG - Thing Privacy Guard
+	IPT - Internet Protocol for Things
+=======================================
+
+ **** Developed By The TatuDevGroup ****
+**** From Wiser Corporation  -  UFBA ****
+      **** Project Smart UFBA ****
