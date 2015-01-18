@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 // General Defines
-#define SRC_PASS_SIZE	17
-#define SRC_DATA_SIZE	17
-#define OUT_HASH_SIZE	17
-#define RC4_KEY_SIZE	256
+#define SRC_PASS_SIZE   17
+#define SRC_DATA_SIZE   17
+#define OUT_HASH_SIZE   17
+#define RC4_KEY_SIZE    256
 // General Macros
 #define SWAP(a,b) TMP = b; b = a; a = TMP
 #define MOD_KEY(a, b) ((a + b) % RC4_KEY_SIZE)
@@ -25,33 +25,33 @@ const char MAP_BASE16[] = "0123456789ABCDEF";
 int TMP, i, j, k;
 
 void rc4_enc_dec(){
-	for(i = 0; i < RC4_KEY_SIZE; i++)
-		DES_HASH[i] = i;
+    for(i = 0; i < RC4_KEY_SIZE; i++)
+        DES_HASH[i] = i;
 
-	for(i = 0, j = 0; i < RC4_KEY_SIZE; i++){
-	    j = MOD_KEY(j, (DES_HASH[i] + SRC_PASS[i % strlen(SRC_PASS)]));
-		SWAP(DES_HASH[i], DES_HASH[j]);
-	}
+    for(i = 0, j = 0; i < RC4_KEY_SIZE; i++){
+        j = MOD_KEY(j, (DES_HASH[i] + SRC_PASS[i % strlen(SRC_PASS)]));
+        SWAP(DES_HASH[i], DES_HASH[j]);
+    }
 
-	for(i = 0, j = 0, k = 0; k < strlen(SRC_DATA); k++){
-		i = MOD_KEY(i, 1);
-		j = MOD_KEY(j, DES_HASH[i]);
-		SWAP(DES_HASH[i], DES_HASH[j]);
-		// OUTPUT
-		TMP = OUTPUT_HASH(i, j, k);
-		// PRINT BYTE H => MAP_BASE16[(TMP >> 4)]
-		// PRINT BYTE L => MAP_BASE16[(TMP & 0x0F)]
-		printf("%c%c ", MAP_BASE16[(TMP >> 4)], MAP_BASE16[(TMP & 0x0F)]);
-	}
+    for(i = 0, j = 0, k = 0; k < strlen(SRC_DATA); k++){
+        i = MOD_KEY(i, 1);
+        j = MOD_KEY(j, DES_HASH[i]);
+        SWAP(DES_HASH[i], DES_HASH[j]);
+        // OUTPUT
+        TMP = OUTPUT_HASH(i, j, k);
+        // PRINT BYTE H => MAP_BASE16[(TMP >> 4)]
+        // PRINT BYTE L => MAP_BASE16[(TMP & 0x0F)]
+        printf("%c%c ", MAP_BASE16[(TMP >> 4)], MAP_BASE16[(TMP & 0x0F)]);
+    }
 }
 
 int main(){
-	scanf("%s",SRC_PASS);
-	scanf("%*c");
-	scanf("%s",SRC_DATA);
-	rc4_enc_dec();
+    scanf("%s",SRC_PASS);
+    scanf("%*c");
+    scanf("%s",SRC_DATA);
+    rc4_enc_dec();
 
-	printf("\n");
+    printf("\n");
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
