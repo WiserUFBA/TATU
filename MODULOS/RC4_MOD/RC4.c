@@ -18,7 +18,7 @@ char SRC_DATA[SRC_DATA_SIZE];
 unsigned char DES_HASH[RC4_KEY_SIZE];
 
 // Base16 MAP ~ should be in PROGMEM or maybe not
-char MAP_BASE16[] = "0123456789ABCDEF";
+const char MAP_BASE16[] = "0123456789ABCDEF";
 
 //uint8_t TMP;
 //uint8_t i, j, k;
