@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 // General Defines
-#define SRC_PASS_SIZE	16
-#define SRC_DATA_SIZE	16
-#define OUT_HASH_SIZE	16
+#define SRC_PASS_SIZE	17
+#define SRC_DATA_SIZE	17
+#define OUT_HASH_SIZE	17
 #define RC4_KEY_SIZE	256
 // General Macros
 #define SWAP(a,b) TMP = b; b = a; a = TMP
