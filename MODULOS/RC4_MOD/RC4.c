@@ -29,7 +29,7 @@ void rc4_enc_dec(){
 		DES_HASH[i] = i;
 
 	for(i = 0, j = 0; i < RC4_KEY_SIZE; i++){
-		j = ((j + DES_HASH[i] + SRC_PASS[i % strlen(SRC_PASS)]) % RC4_KEY_SIZE);
+	    j = MOD_KEY(j, (DES_HASH[i] + SRC_PASS[i % strlen(SRC_PASS)]));
 		SWAP(DES_HASH[i], DES_HASH[j]);
 	}
 
