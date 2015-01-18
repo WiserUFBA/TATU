@@ -41,7 +41,7 @@ void rc4_enc_dec(){
 		TMP = OUTPUT_HASH(i, j, k);
 		// PRINT BYTE H => MAP_BASE16[(TMP >> 4)]
 		// PRINT BYTE L => MAP_BASE16[(TMP & 0x0F)]
-		printf("%c%c", MAP_BASE16[(TMP >> 4)], MAP_BASE16[(TMP & 0x0F)]);
+		printf("%c%c ", MAP_BASE16[(TMP >> 4)], MAP_BASE16[(TMP & 0x0F)]);
 	}
 }
 
