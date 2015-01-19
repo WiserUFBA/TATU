@@ -82,32 +82,47 @@ Funções:
   	> CRYPTO
   	: Funcionamento
   		Indica a criptografia de uma informação e a necessidade da descriptografia
+  	: Propriedade
+  	  	- REQUIRE - Prepara o sistema para o envio de um pacote criptografado
+  		- DECRYPT - Indica que a mensagem precisa ser descriptografada
   	: Estrutura
-  		==========================
-  		CRYPTO <encrypted_message>
-  		==========================
+  		========================================
+  		CRYPTO <propriedade> <encrypted_message>
+  		========================================
 
-  	> AUTH
-  	: Funcionamento
-  		Autentica e habilita a comunicação criptografada entre dois dispositivos
-  		O processo de autenticação é feita em 3 passos
-  		1º - Requisição de Chave Pública:
-  			AUTH REQUIRE  /** Requisita uma chave pública para o dispositivo ou serviço **/
-  		2º - Entrega da Chave Pública:
-  			AUTH PUBLIC <password> /** Retorna uma chave pública para o dispositivo ou serviço **/
-  		3º - Encriptação de dispositivo e senha:
-  			AUTH LOGIN <encrypted_object> /** Retorna um objeto de autenticação {LOGIN: { DEVICE: <name>, PASSWORD: <pass>}} **/
-  		E por último o sistema irá conferir e autenticar a comunicação
-  	: Propriedades
-  		- REQUIRE - Requisita uma chave pública para a comunicação
-  		- PUBLIC - Retorna a chave pública
-  		- LOGIN - Envia as informações para a autenticação
-  	: Estrutura
-  		=====================================
-  		AUTH <propriedade> <encrypted_object>
-  		=====================================
+    > TCHK
+    : Funcionamento
+        TATU CHECK - Informa que o cabeçalho do arquivo está correto e a mensagen pode
+        ser descriptografada com segurança. Estes quatro caracteres tem que ser o começo de qualquer
+        pacote criptografado as quatro letras tem que estar em MAIUSCULO e na ordem apresentada abaixo
+        se o pacote não apresentar tal informação o pacote será considerado inválido e descartado
+    : Estrutura
+        ====================
+        TCHK <short_message>
+        ====================
+
+Short and Full TPI
+-------------------
+        Há duas formas de se criar pacotes TPI e são Short e Full. Eles são bem parecidos mas
+    tem uma diferença marcanta que é quantidade de caracteres por comando, enquanto que
+    no Full as mensagens são escritas de forma completa no Short a única coisa que interessa
+    é o primeiro caractere e isso é algo importante no TPI já que como o foco dele é dispositivos
+    com recursos limitados não se faz questão de armazenar a string inteira e sim só um caractere.
+    
+    : Exemplo
+        == Full ===
+        GET INFO P1
+        ===========
+        == Short ==
+        G    I   P1
+        ===========
+
+        Observando o exemplo também fica claro que comparar a string não é o foco do TPI e por isso
+    é necessário que a parte importante da string (os primeiros caracteres) e a informação que se
+    passa por parametro estejam em corretas, caso contrário a informação não será lida.
 
 	Obs.: Toda requisição acaba com um '\n'
+	Obs.: Todo comando é escrito com letras maiusculas
 
    **** Developed By The TatuDevGroup ****
   **** From Wiser Corporation  -  UFBA **** 
