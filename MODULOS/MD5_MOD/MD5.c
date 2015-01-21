@@ -51,11 +51,12 @@ UINT4 MD5_CONTEXT_STATE[STATE_SIZE];
 // MD5 Buffer
 UINT4 MD5_TMP[MD5_OUTPUT_SIZE];
 uchar MD5_OUTPUT[MD5_OUTPUT_SIZE];
-uchar MD5_BUFFER[MD5_BUFFER_SIZE] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+uchar MD5_PADDING[MD5_BUFFER_SIZE] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uchar MD5_BUFFER[MD5_BUFFER_SIZE];
 
 // Entrada
 char INPUT_STRING[21];
@@ -202,7 +203,7 @@ void MD5Final(){
     index = (unsigned int)((MD5_CONTEXT_COUNT[0] >> 3) & 0x3f);
     padLen = (index < 56) ? (56 - index) : (120 - index);
 
-    MD5Update(MD5_BUFFER, padLen);
+    MD5Update(MD5_PADDING, padLen);
     MD5Update(count, 8);
 
     for (i = 0, j = 0; j < 16; i++, j += 4) {
