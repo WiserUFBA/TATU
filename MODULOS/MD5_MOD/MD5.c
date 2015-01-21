@@ -40,17 +40,22 @@
 // Usingned long type
 //typedef unsigned long unsigned int;
 typedef unsigned char uchar;
+typedef unsigned long int UINT4;
 
 // Base16 MAP ~ should be in PROGMEM or maybe not
 const char MAP_BASE16[] = "0123456789ABCDEF";
 
 // MD5 Context
 unsigned int MD5_CONTEXT_COUNT[COUNTER_SIZE];
-unsigned int MD5_CONTEXT_STATE[STATE_SIZE];
+UINT4 MD5_CONTEXT_STATE[STATE_SIZE];
 // MD5 Buffer
-uchar MD5_TMP[MD5_OUTPUT_SIZE];
+UINT4 MD5_TMP[MD5_OUTPUT_SIZE];
 uchar MD5_OUTPUT[MD5_OUTPUT_SIZE];
-uchar MD5_BUFFER[MD5_BUFFER_SIZE];
+uchar MD5_BUFFER[MD5_BUFFER_SIZE] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // Entrada
 char INPUT_STRING[21];
@@ -81,12 +86,12 @@ void MD5Clear(){
 }
 
 void MD5Transform(){
-    for(i = 0; i < MD5_OUTPUT_SIZE; i++)
-        MD5_TMP[i] = (uchar)( \
-                        (uchar)(MD5_BUFFER[i * 4 + 0])       | \
-                        (uchar)(MD5_BUFFER[i * 4 + 1]) << 8  | \
-                        (uchar)(MD5_BUFFER[i * 4 + 2]) << 16 | \
-                        (uchar)(MD5_BUFFER[i * 4 + 3]) << 24) ; 
+    for(i = 0, j = 0; j < 64; i++, j+=4)
+        MD5_TMP[i] = (UINT4)( \
+                        (UINT4)(MD5_BUFFER[j])       | \
+                        (UINT4)(MD5_BUFFER[j+1]) << 8  | \
+                        (UINT4)(MD5_BUFFER[j+2]) << 16 | \
+                        (UINT4)(MD5_BUFFER[j+3]) << 24) ; 
 
     // Round 1
     MD5STEP(G, aV, bV, cV, dV, MD5_TMP[ 0] + 0xd76aa478,  7);
@@ -159,48 +164,53 @@ void MD5Transform(){
 }
 
 void MD5Update(uchar *input, size_t len){
-    size_t have, need;
+    unsigned int index, partLen;
 
-    have = (size_t)((MD5_CONTEXT_COUNT[0] >> 3) & (MD5_BUFFER_SIZE - 1));
-    need = MD5_BUFFER_SIZE - have;
+    index = (unsigned int)((MD5_CONTEXT_COUNT[0] >> 3) & 0x3F);
 
-    if((MD5_CONTEXT_COUNT[0] += ((unsigned int)len << 3)) < (unsigned int)len)
+    if((MD5_CONTEXT_COUNT[0] += ((UINT4)len << 3)) < ((UINT4)len << 3))
         MD5_CONTEXT_COUNT[1]++;
-    MD5_CONTEXT_COUNT[1] += ((unsigned int)len >> 29);
+    MD5_CONTEXT_COUNT[1] += ((UINT4)len >> 29);
 
-    if(len >= need)
-        if(have != 0){
-            // Copy Memory
-            for(i = have; i < (have + need); i++)
-                input[i] = (uchar)MD5_CONTEXT_STATE[i];
-            MD5Transform();
-            input += need;
-            len -= need;
-            have = 0;
-        }
+    partLen = 64 - index;
 
-    if(len != 0)
-        for(i = have; i < (have + len); i++)
-            input[i] = MD5_CONTEXT_STATE[i];
+    if(len >= partLen){
+        for (i = index; i < partLen; i++)
+            MD5_BUFFER[i] = input[i];
 
+        MD5Transform();
+        index = 0;
+    }
+    else i = 0;
+
+    for (i = index; i < partLen; i++)
+        MD5_BUFFER[i] = input[i];
 }
 
 void MD5Final(){
     uchar count[8];
-    size_t MD5_BUF;
+    unsigned int index, padLen;
 
-    PUT_64BIT_LE(count, MD5_CONTEXT_COUNT);
+    //PUT_64BIT_LE(count, MD5_CONTEXT_COUNT);
+    for (i = 0, j = 0; j < 8; i++, j += 4) {
+        count[j] = (unsigned char)(MD5_CONTEXT_COUNT[i] & 0xff);
+        count[j+1] = (unsigned char)((MD5_CONTEXT_COUNT[i] >> 8) & 0xff);
+        count[j+2] = (unsigned char)((MD5_CONTEXT_COUNT[i] >> 16) & 0xff);
+        count[j+3] = (unsigned char)((MD5_CONTEXT_COUNT[i] >> 24) & 0xff);
+    }
 
-    MD5_BUF = MD5_BUFFER_SIZE - ((MD5_CONTEXT_COUNT[0] >> 3) & (MD5_BUFFER_SIZE - 1));
+    index = (unsigned int)((MD5_CONTEXT_COUNT[0] >> 3) & 0x3f);
+    padLen = (index < 56) ? (56 - index) : (120 - index);
 
-    if(MD5_BUF < 1 + 8)
-        MD5_BUF += MD5_BUFFER_SIZE;
-
-    MD5Update(MD5_BUFFER, MD5_BUF - 8);
+    MD5Update(MD5_BUFFER, padLen);
     MD5Update(count, 8);
 
-    for(i = 0; i < 4; i++)
-        PUT_32BIT_LE(MD5_OUTPUT + i * 4, MD5_CONTEXT_STATE[i]);
+    for (i = 0, j = 0; j < 16; i++, j += 4) {
+        MD5_OUTPUT[j] = (unsigned char)(MD5_CONTEXT_STATE[i] & 0xff);
+        MD5_OUTPUT[j+1] = (unsigned char)((MD5_CONTEXT_STATE[i] >> 8) & 0xff);
+        MD5_OUTPUT[j+2] = (unsigned char)((MD5_CONTEXT_STATE[i] >> 16) & 0xff);
+        MD5_OUTPUT[j+3] = (unsigned char)((MD5_CONTEXT_STATE[i] >> 24) & 0xff);
+    }
 
     MD5Clear();
 }
