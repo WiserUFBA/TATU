@@ -16,11 +16,11 @@ char EEPROM_READ(uint16_t end){
 void EEPROM_READ_NS(uint16_t end, char* p){
     end = EEPROM_READ(end);
     for(;EEPROM_READ(end) != '\0';){
-        &p = EEPROM_READ(end);
+        *p = EEPROM_READ(end);
         p++;
         end++;
     }
-    &p = '\0';
+    *p = '\0';
     
 }
 
@@ -28,7 +28,7 @@ void EEPROM_READ_WS(uint16_t end, char* p, uint8_t tamanho){
     char i;
     end = EEPROM_READ(end);
     for(i = 0; i < tamanho; p++){
-        &p = EEPROM_READ(end);
+        *p = EEPROM_READ(end);
         end++;
     }
 }
@@ -50,7 +50,7 @@ void EEPROM_WRITE(uint16_t end, char data){
 
 void EEPROM_WRITE_NS(uint16_t end, char* vetor){
     end = EEPROM_READ(end);
-    for(;&vetor != '\0';){
+    for(;*vetor != '\0';){
         EEPROM_WRITE(end, &vetor);
         end++;
         vetor++;
@@ -62,7 +62,7 @@ void EEPROM_WRITE_WS(uint16_t end, char* vetor, uint8_t tamanho){
     uint8_t i;
     end = EEPROM_READ(end);
     for(i = 0; i < tamanho; i++){
-        EEPROM_WRITE(end, &vetor);
+        EEPROM_WRITE(end, *vetor);
         end++;
         vetor++;
     }
