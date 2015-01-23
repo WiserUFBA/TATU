@@ -7,7 +7,7 @@ TATU - (The Accessible Things Universe)
 	TOS - Thing Operating System
 	TPS - Thing Property Standard
 	TPG - Thing Privacy Guard
-	IPT - Internet Protocol for Things
+	TPI - Thing Protocol for Internet
 =======================================
 
  **** Developed By The TatuDevGroup ****
