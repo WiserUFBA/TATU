@@ -3,11 +3,98 @@ TPG - Thing Privacy Guard
 
 Introdução:
 ---------------
-    Implementa o TatuShell (devil) (^(◣_◢)^)
-muahhauhauhauhauahauhauhauhauhauhauhauha
 
-TPG IS COMING!...
+    Boa parte da comunicação entre dispositivos e serviços não necessita
+criptografia ou algum metodo de segurança que garanta a integridade dos
+mesmos, o que é facilmente visto com dispositivos os quais apenas permitem
+o acesso a suas informações e não mais que isso. Porém há certas situações
+como por exemplo a modificação de uma propriedade interna e a modificação
+do estado de algum sensor no dispositivo que não detém deste trunfo, nestas
+aplicações a segurança não só é uma boa maneira como também é necessária
+visto que caso ela não exista o dispositivo estaria extremamente vulneravél
+não só a ataques como também a um erro por parte de algum usuário. 
+    A segurança em uma comunicação principalmente quando ela é sem fio é um
+assunto bem antigo e amplamente discutido há bastante tempo. Criar metodos
+que protejam a comunicação e ao mesmo tempo garantam não só integridade como
+também a segurança dos mesmos é só um dos inúmeros problemas desse meio.
+Desde o inicio o problema não está em criptografar a informação se utilizando
+de bastante criptografia mas sim em criptografar a mensagem de forma que a
+comunicação seja fluída e possível.
+    Desde muito tempo atrás, criptografar mensagens é uma necessidade basta
+olharmos a "criptografia de césar" ou "Caesar cypher" que remota aos tempos
+de Roma, ela constituia de uma simples adição circular nas letras da mensagem,
+o que apesar de ser bem simples de ser descriptografado por um computador
+hoje em dia, deveria render bastante tempo para alguém naquela época, não
+só pela falta de acesso a informação mas também devido a dificuldade de se
+descriptografar uma simples mensagem já que só um determiado grupo sabia qual
+tinha sido o metodo criptografico usado, sem saber como a mensagem foi
+criptografada, fica muito dificil tentar executar um ataque de "força bruta".
+    O interessante da "criptografia de césar" é que ela demonstra uma regra
+bastante importante nas comunicações criptografada, a "viabilidade". Os gregos
+eram famosos por sua matemática e arquitetura e foram saqueados inúmeras vezes
+pelos romanos, logo temos que boa parte do conhecimento adquiridos por eles,
+poderia também estar em Roma, assim suponha-mos que os Romanos em um ataque
+a Grécia, adquiram conhecimento necessário para tornar a "Criptografia de 
+Cesar" em algo praticamente inviolavel, sabemos que em nossa suposição tal
+metodo necessita de uma hora para se criptografar uma mensagem de até uma
+folha, se compararmos a primeira versão da criptografia de césar temos que
+esse novo metodo necessita de 10x o tempo necessário para o metodo anterior,
+que necessitava apenas de 6 minutos, isso sem falar na descriptografia que
+agora por ser mais complexa necessita do dobro de tempo da criptografia ou 
+seja duas horas para a mensagem de mesmo tamanho, e novamente se comparado a
+primeira versão que necessita dos mesmos 6 minutos para a descriptografia
+temos uma diferença desta vez de 20x para este novo metodo. Agora pegamos
+uma situação de guerra aonde é necessário uma constante comunicação, tendo
+1 hora para criptografia, mais 1 hora para o transporte e 2 horas para a
+descriptografia teremos um tempo minimo necessário de 4 horás desde a ordem
+de envio da mensagem para se chegar ao outro grupo em uma rápida comparação
+tendo que não há como aumentar a velocidade do transporte, teriamos a mesma
+mensagem com o metodo antigo entregue em 1 hora e 12 minutos, essa mesma
+analogia pode ser feita para as coisas, não há como manter uma comunicação 
+fluída o suficiente se utilizarmos um metodo que necessita de uma quantidade
+muito grande de recursos e processamento mesmo para uma simples mensagem.
+    Porém utilizar um metodo de criptografia muito simples também é ruim
+pegamos a mesma analogia anterior e agora colocamos um individuo 
+interceptador na comunicação, vamos supor que sejam necessárias de no máximo
+26 tentativas para se conseguir chegar a mensagem descriptografada e como
+nosso interceptador irá tentar descriptografar a mensagem toda através desse
+metodo de força bruta. Sabemos que o tempo necessario para se descriptografar
+a mensagem já possuindo a senha são 6 minutos e como na força bruta iremos
+força 26 senhas até se chegar ao resultado teremos que no pior caso vão ser
+necessários 26 * 6 minutos para se obter a mensagem descriptografada o que
+representaria 156 minutos, pouco mais que 2 horas caso convertido. Como não
+precisamos nos atentar a questões técnicas visto que isso são apenas 
+suposições suponhamos que esse tempo seja proporcional a descriptografia do
+segundo metodo que como sabemos é de 20x a da primeira, e multipliquemos esse
+valor pelo tempo da execução da descriptografia através de força bruta, 
+seriam necessários 3120 minutos para o mesmo metodo de força bruta se fosse
+utilizado para descriptografar a mesma mensagem, porém com a criptografia
+mais nova.
+    Se analisarmos bem, tudo que vimos até agora veremos que os dois metódos
+são muito extremos para uma comunicação segura e flúida, já que um é seguro
+porém requer muito tempo e o segundo é rápido porém não é muito seguro,
+o que podemos fazer nestes casos? Nosso contexto atual sofre dos mesmos 
+problemas e se antes o problema era só computadores hoje temos um outro 
+agravante que é a velocidade com que a tecnologia está crescendo. 
+Tecnologias distribuidas estão se tornando padrão para muitas aplicações e o
+uso de GPU que possuem arquitetura many core ou "multiplos nucleos" tem se 
+tornado padrão em servidores, isso leva o poder de processamento tanto
+sequencial como paralelo das aplicações a um outro nível, nível este tão
+grande que metodos que a poucos anos atrás eram considerados bastante seguros
+em vulneravéis. Esse crescimento exponencial tem posto em cheque justamente
+a segurança das comunicações sem fio já que por melhor e mais rápidas que
+sejam se comparado com o poder gigantesco de um servidor distribuido com
+boas GPUs é infimo.
+    A solução para este problema é a de atrasar o invasor e impedir que ele
+obtenha informações cruciais ou que possa se passar pela vitíma, já que
+assim evitariamos boa parte dos ataques, e manteriamos a rede segura e fluída
+na medida do possível.
 
+Metodos de Segurança:
+----------------------------
+    Em nosso meio
+
+    
     **** Developed By The TatuDevGroup ****
     **** From Wiser Corporation - UFBA ****
           **** Project Smart UFBA ****
