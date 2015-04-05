@@ -3,6 +3,7 @@ TPI - Thing Protocol for Internet
 
 Introdução:
 ---------------
+*** V-0.1
 	O TPI ou Internet Protocol for Things é um protocolo de comunicação criado
 pelo grupo de desenvolvimento WiserUFBA setor TatuDev, setor tal que tem por 
 objetivo a pesquisa e o desenvolvimento de hardware e software para embarcados.
@@ -13,6 +14,11 @@ porta 171 e transmitindo pequenas mensagens as quais podem ser autenticadas atra
 de um processo próprio de autenticação também desenvolvido por nós.
 	O TPI é uma das diretivas utilizadas na criação do ecossistema TATU 
 (Thing Accessibility Through Utilities) para o dispositivo de codinome UFBAINO.
+*** V-0.2
+	Agora todos as funções tem retorno mesmo que este não seja usado
+	Status foi renomeado para STATE em todas as funções.
+	<var> Deve ser um número de um digito entre 0 e 7 (TEMPORARIO)
+
 
 Funções:
 ---------------
@@ -22,23 +28,28 @@ Funções:
 	: Propriedades
 		- ALL:  Retorna todas as informações presentes no controlador
 				Sem variaveis.
-		- INFO: Retorna uma informação especificada por parametro
+		- INFO: Retorna uma informação especificada por parametro como uma propriedade
 				<var> ? string.
-		- STATUS: Retorna o status de um pino
+		// Status foi renomeado para ficar mais claro
+		- STATE: Retorna o estado de um pino
 				<var> ? pin_num/sensor_num/sensor_name.
-		- PROPERTY: Retorna uma propriedade do dispositivo
+		// DEPRECATED
+		//- PROPERTY: Retorna uma propriedade do dispositivo
 				<var> ? property_name.
 	: Estrutura
 		=======================
 		GET <propriedade> <var>
 		=======================
-
+	* <var> deve ser um numero de um digito entre 0 e 7
+	
 	> SET
 	: Funcionamento
 		Modifica uma informação em outro dispositivo
 	: Propriedades
-		- STATUS: Modifica o estado de uma variavel
+		- STATE: Modifica o estado de uma variavel
 				<var1> <valor1> ...
+		// Ainda não implementando mesmo na versão 0.2
+		// Escolha usar STATE ao invés de info
 		- INFO: Modifica uma string
 				<var1> <valor1> ...
 		- RETORNO: Indica a necessidade do retorno
@@ -46,6 +57,10 @@ Funções:
 		================================================================
 		SET <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
 		================================================================
+	* <var> deve ser um numero de um digito entre 0 e 7
+	** <valor> deve ser um numero de um digito e só pode representar os estados
+	   0 - false
+	   1 - true
 	
 	> POST
 	: Funcionamento
@@ -79,6 +94,7 @@ Funções:
 		EDIT <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
 		=================================================================
 
+	// Teorico até a versão 0.2 deve ser implementado em versões futuras
   	> CRYPTO
   	: Funcionamento
   		Indica a criptografia de uma informação e a necessidade da descriptografia
@@ -90,6 +106,7 @@ Funções:
   		CRYPTO <propriedade> <encrypted_message>
   		========================================
 
+    // Teorico até a versão 0.2 deve ser implementado em versões futuras
     > TCHK
     : Funcionamento
         TATU CHECK - Informa que o cabeçalho do arquivo está correto e a mensagen pode
@@ -103,6 +120,9 @@ Funções:
 
 Short and Full TPI
 -------------------
+	!!! WARNING !!!
+    // É importante que a versão SHORT seja usada apenas em pacotes criptografados!
+    // Deve ser evitado o uso da notação SHORT nas versões 0.1 e 0.2
         Há duas formas de se criar pacotes TPI e são Short e Full. Eles são bem parecidos mas
     tem uma diferença marcanta que é quantidade de caracteres por comando, enquanto que
     no Full as mensagens são escritas de forma completa no Short a única coisa que interessa
