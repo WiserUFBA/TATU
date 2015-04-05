@@ -52,11 +52,13 @@ Funções:
 		// Escolha usar STATE ao invés de info
 		- INFO: Modifica uma string
 				<var1> <valor1> ...
-		- RETORNO: Indica a necessidade do retorno
+		// DEPRECATED
+		// - RETORNO: Indica a necessidade do retorno
+		// Retorno agora é obrigatorio
 	: Estrutura
-		================================================================
-		SET <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
-		================================================================
+		=====================================================
+		SET <propriedade> <var1> <valor1> <var2> <valor2> ...
+		=====================================================
 	* <var> deve ser um numero de um digito entre 0 e 7
 	** <valor> deve ser um numero de um digito e só pode representar os estados
 	   0 - false
@@ -76,9 +78,11 @@ Funções:
 		- BODY
 			<type1>: {<var1>: <valor1>, ...}, ...
 	: Estrutura
-		============================================================================================
-		POST {HEADER: { <propriedade1>: <valor1>, ...}, BODY:{<type1>: {<var1>: <valor1>, ...}, ...}  
-		============================================================================================
+		=====================================================================================================
+		POST <device>[<opt>]:{HEADER: { <propriedade1>: <valor1>, ...}, BODY:{<type1>:{<var1>:..., ...}, ...}  
+		=====================================================================================================
+		* <device> é o nome do dispositivo 
+		** [<opt>] é opcional e pode ser removido caso não venha a ser utilizado
 
 	> EDIT
 	: Funcionamento
