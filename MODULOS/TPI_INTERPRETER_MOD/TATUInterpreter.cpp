@@ -1,8 +1,6 @@
 #include "TATUInterpreter.h"
 
 void TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
-    int i;
-
     switch(string[0]){
         case COMMAND_SET:
             cmd.OBJ.TYPE = TATU_SET;
@@ -61,6 +59,7 @@ void TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
 
     ERROR = true;
 }
+
 bool TATUInterpreter::getERROR(){
     return ERROR;
 }
