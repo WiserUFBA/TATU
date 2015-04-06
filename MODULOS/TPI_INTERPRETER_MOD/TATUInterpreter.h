@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+
 #define TATU_SET    0
 #define TATU_GET    1
 #define TATU_POST   2
@@ -34,11 +35,12 @@ private:
         } OBJ;
         uint8_t STRUCTURE;
     } Command;
-    uint8_t ERROR;
+    bool ERROR;
 public:
-    Command command;
+    Command cmd;
     TATUInterpreter(){ ERROR = true; }
     void Interpreter(unsigned char *, unsigned int);
+    bool getERROR();
 };
 
 #endif
