@@ -1,6 +1,6 @@
 #include "TATUInterpreter.h"
 
-TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
+void TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
     int i;
 
     switch(string[0]){
@@ -60,4 +60,7 @@ TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
     }
 
     ERROR = true;
+}
+bool TATUInterpreter::getERROR(){
+    return ERROR;
 }
