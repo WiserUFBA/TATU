@@ -1,6 +1,6 @@
 #include "TATUInterpreter.h"
 
-void TATUInterpreter::Interpreter(unsigned char *string, unsigned int length){
+void TATUInterpreter::parse(unsigned char *string, unsigned int length){
     switch(string[0]){
         case COMMAND_SET:
             cmd.OBJ.TYPE = TATU_SET;
