@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 #define TATU_SET    0
 #define TATU_GET    1
 #define TATU_POST   2
@@ -39,7 +38,7 @@ private:
 public:
     Command cmd;
     TATUInterpreter(){ ERROR = true; }
-    void Interpreter(unsigned char *, unsigned int);
+    void parse(unsigned char *, unsigned int);
     bool getERROR();
 };
 
