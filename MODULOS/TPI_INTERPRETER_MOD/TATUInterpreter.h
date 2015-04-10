@@ -39,7 +39,7 @@ public:
     Command cmd;
     char str_val[6];
     TATUInterpreter(){ ERROR = true; }
-    void parse(unsigned char *, unsigned int);
+    bool parse(unsigned char *, unsigned int);
     bool getERROR();
 };
 
