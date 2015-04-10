@@ -1,13 +1,18 @@
 #include "TATUInterpreter.h"
 
-void TATUInterpreter::parse(unsigned char *string, unsigned int length){
+bool TATUInterpreter::parse(unsigned char *string, unsigned int length){
+    int i;
     switch(string[0]){
         case COMMAND_SET:
             cmd.OBJ.TYPE = TATU_SET;
 
             if(string[4] == CODE_INFO){
                 cmd.OBJ.CODE = TATU_CODE_INFO;
-                // Not implemented yet
+                for (i = 0; i < 6; ++i){   
+                        str_val[i] = string[9+i];
+                }
+                if(i > 6) break;
+                str_val[i] = '\0';
             }
             else if(string[4] == CODE_STATE){
                 cmd.OBJ.CODE = TATU_CODE_STATE;
@@ -17,8 +22,8 @@ void TATUInterpreter::parse(unsigned char *string, unsigned int length){
             else break;
 
             ERROR = false;
-            return;
-        case cmd_GET:
+            return true;
+        case COMMAND_GET:
             cmd.OBJ.TYPE = TATU_GET;
             
             if(string[4] == CODE_ALL){
@@ -26,7 +31,11 @@ void TATUInterpreter::parse(unsigned char *string, unsigned int length){
             }
             else if(string[4] == CODE_INFO){
                 cmd.OBJ.CODE = TATU_CODE_INFO;
-                // Not implemented yet
+                for (i = 0; i < 6; ++i){   
+                        str_val[i] = string[9+i];
+                }
+                if(i > 6) break;
+                str_val[i] = '\0';
             }
             else if(string[4] == CODE_STATE){
                 cmd.OBJ.CODE = TATU_CODE_STATE;
@@ -35,12 +44,16 @@ void TATUInterpreter::parse(unsigned char *string, unsigned int length){
             else break;
 
             ERROR = false;
-            return;
-        case cmd_EDIT:
+            return true;
+        case COMMAND_EDIT:
             cmd.OBJ.TYPE = TATU_EDIT;
             if(string[5] == CODE_INFO){
                 cmd.OBJ.CODE = TATU_CODE_INFO;
-                // Not implemented yet
+                for (i = 0; i < 6; ++i){   
+                        str_val[i] = string[10+i];
+                }
+                if(i > 6) break;
+                str_val[i] = '\0';
             }
             else if(string[5] == CODE_STATE){
                 cmd.OBJ.CODE = TATU_CODE_STATE;
@@ -50,14 +63,15 @@ void TATUInterpreter::parse(unsigned char *string, unsigned int length){
             else break;
 
             ERROR = false;
-            return;
-        case cmd_POST:
+            return true;
+        case COMMAND_POST:
             cmd.OBJ.TYPE = TATU_POST;
             ERROR = false;
-            return;
+            return true;
     }
 
     ERROR = true;
+    return false;
 }
 
 bool TATUInterpreter::getERROR(){
