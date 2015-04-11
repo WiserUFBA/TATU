@@ -37,7 +37,7 @@ private:
     bool ERROR;
 public:
     Command cmd;
-    char str_val[6];
+    uint32_t str_hash;
     TATUInterpreter(){ ERROR = true; }
     bool parse(unsigned char *, unsigned int);
     bool getERROR();
