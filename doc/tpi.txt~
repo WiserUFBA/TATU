@@ -61,8 +61,8 @@ Funções:
 		=====================================================
 	* <var> deve ser um numero de um digito entre 0 e 7
 	** <valor> deve ser um numero de um digito e só pode representar os estados
-	   F - false
-	   T - true
+	   0 - false
+	   1 - true
 	
 	> POST
 	: Funcionamento
