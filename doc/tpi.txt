@@ -14,11 +14,22 @@ porta 171 e transmitindo pequenas mensagens as quais podem ser autenticadas atra
 de um processo próprio de autenticação também desenvolvido por nós.
 	O TPI é uma das diretivas utilizadas na criação do ecossistema TATU 
 (Thing Accessibility Through Utilities) para o dispositivo de codinome UFBAINO.
-*** V-0.2
-	Agora todos as funções tem retorno mesmo que este não seja usado
-	Status foi renomeado para STATE em todas as funções.
-	<var> Deve ser um número de um digito entre 0 e 7 (TEMPORARIO)
 
+*** V-0.2
+-	Agora todos as funções tem retorno mesmo que este não seja usado
+-	Status foi renomeado para STATE em todas as funções.
+-	<var> Deve ser um número de um digito entre 0 e 7 (TEMPORARIO)
+-
+-
+*** V-0.3
+	Ele está sendo implementado através de um driver que utiliza um MQTT Broker para enviar uma função
+	a um dispositivo. A resposta do dispositivo será um POST, que é uma string JSON que o driver será capaz 
+	de interpretar e pegar a informação correta se necessário.(https://github.com/WiserUFBA/DriverMQTT)
+	
+-	Adicionado a propriedade VALUE para numeiros inteiros
+-	STATE passa a só ser usado para valores booleanos
+-	INFO passa a ser usado em GET, SET e EDIT
+	
 
 Funções:
 ---------------
@@ -28,42 +39,32 @@ Funções:
 	: Propriedades
 		- ALL:  Retorna todas as informações presentes no controlador
 				Sem variaveis.
-		- INFO: Retorna uma informação especificada por parametro como uma propriedade
-				<var> ? string.
-		// Status foi renomeado para ficar mais claro
-		- STATE: Retorna o estado de um pino
-				<var> ? pin_num/sensor_num/sensor_name.
-		// DEPRECATED
-		//- PROPERTY: Retorna uma propriedade do dispositivo
-				<var> ? property_name.
+		- INFO: Retorna uma informação do tipo string especificada por parametro como uma propriedade
+				<var>* 
+		- VALUE: Retorna uma informação do tipo inteiro especificada por parametro como uma propriedade
+				<var> 
+		- STATE: Retorna uma informação do tipo booleano especificada por parametro como uma propriedade
+				<var> 
+
 	: Estrutura
 		=======================
 		GET <propriedade> <var>
 		=======================
-	* <var> deve ser um numero de um digito entre 0 e 7
 	
 	> SET
 	: Funcionamento
 		Modifica uma informação em outro dispositivo
 	: Propriedades
-		- STATE: Modifica o estado de uma variavel
-				<var1> <valor1> ...
-		// Ainda não implementando mesmo na versão 0.2
-		// Escolha usar STATE ao invés de info
 		- INFO: Modifica uma string
+				<var1> <valor1>** ...
+		- VALUE: Modifica o valor de uma variável inteira
 				<var1> <valor1> ...
-		// DEPRECATED
-		// - RETORNO: Indica a necessidade do retorno
-		// Retorno agora é obrigatorio
+		- STATE: Modifica o estado de uma variável booleana
+				<var1> <valor1> ...
 	: Estrutura
 		=====================================================
 		SET <propriedade> <var1> <valor1> <var2> <valor2> ...
 		=====================================================
-	* <var> deve ser um numero de um digito entre 0 e 7
-	** <valor> deve ser um numero de um digito e só pode representar os estados
-	   F - false
-	   T - true
-	
 	> POST
 	: Funcionamento
 		Retorno de uma requisição
@@ -72,7 +73,8 @@ Funções:
 		O post é formado por dois objetos o HEADER e o BODY
 		O HEADER representa o cabeçalho da requisiçao e nele estarão contidas todas as propriedades
 		do dispositivo o qual está enviando as informações
-		O BODY representa todas as variaveis ou informações que foram requisitadas
+		O BODY em caso da propriedade GET representa todas as variaveis ou informações que foram requisitadas
+		caso contrário o valor é nulo(null)
 		- HEADER
 			<propriedade1>: <valor1>, ...
 		- BODY
@@ -83,14 +85,18 @@ Funções:
 		=====================================================================================================
 		* <device> é o nome do dispositivo 
 		** [<opt>] é opcional e pode ser removido caso não venha a ser utilizado
+	:V-0.3 Header estrucure
+		HEADER:{"NAME":<string>,"ID":<inteiro>,"PAN":<inteiro>,"IP":<string>}
 
 	> EDIT
 	: Funcionamento
 		Modifica propriedades internas a um controlador
 	: Propriedades
-		- STATUS: Modifica o estado de uma variavel
-				<var1> <valor1> ...
 		- INFO: Modifica uma string
+				<var1> <valor1> ...
+		- VALUE: Modifica um inteiro
+				<var1> <valor1> ...
+		- STATUS: Modifica um valor booleano
 				<var1> <valor1> ...
 		- RETORNO: Indica a necessidade do retorno
   	: Estrutura
@@ -98,7 +104,7 @@ Funções:
 		EDIT <propriedade> <retorno?> <var1> <valor1> <var2> <valor2> ...
 		=================================================================
 
-	// Teorico até a versão 0.2 deve ser implementado em versões futuras
+	// Teorico até a versão 0.3 deve ser implementado em versões futuras
   	> CRYPTO
   	: Funcionamento
   		Indica a criptografia de uma informação e a necessidade da descriptografia
@@ -110,7 +116,7 @@ Funções:
   		CRYPTO <propriedade> <encrypted_message>
   		========================================
 
-    // Teorico até a versão 0.2 deve ser implementado em versões futuras
+    // Teorico até a versão 0.3 deve ser implementado em versões futuras
     > TCHK
     : Funcionamento
         TATU CHECK - Informa que o cabeçalho do arquivo está correto e a mensagen pode
@@ -122,11 +128,31 @@ Funções:
         TCHK <short_message>
         ====================
 
+	* <var> Deve ser uma string em caso de um atributo do dispositivo
+			E um número em caso de um pino 
+			Exemplo: 
+				"SET STATE LAMP T" modifica o valor booleana dessa variável 
+				"SET STATE 1 T" modifica o valor booleano desse pino 
+	** <valor> O formato do valor varia dependendo da propriedade e da função
+		GET, SET e EDIT:
+		   INFO
+		   	string
+		   VALUE
+		   	inteiro
+		   STATE
+		   	F - false
+		   	T - true
+
+		POST:
+			string ou inteiro dependendo do tipo da informação
+			obs: strings ficam entre double quote ("") 
+	
+
 Short and Full TPI
 -------------------
 	!!! WARNING !!!
     // É importante que a versão SHORT seja usada apenas em pacotes criptografados!
-    // Deve ser evitado o uso da notação SHORT nas versões 0.1 e 0.2
+    // Deve ser evitado o uso da notação SHORT nas versões 0.1, 0.2 e 0.3
         Há duas formas de se criar pacotes TPI e são Short e Full. Eles são bem parecidos mas
     tem uma diferença marcanta que é quantidade de caracteres por comando, enquanto que
     no Full as mensagens são escritas de forma completa no Short a única coisa que interessa
