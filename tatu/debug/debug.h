@@ -1,0 +1,101 @@
+#ifndef debug_h
+#define debug_h
+
+//#define DEBUG 1
+#include <iostream>
+#include <stdint.h>
+using namespace std;
+// Change debug port to Software Serial Object if you want to
+#ifdef AVR_GCC
+	#include "Arduino.h"
+    #define DEBUG_PORT	ATMSerial
+#endif
+// Using ESP
+//#define ESP_GCC 
+#ifdef ESP_GCC
+	#include "Arduino.h"
+    #define DEBUG_PORT	ESPSerial
+#endif
+
+#ifdef PROGMEM
+    //void SerialPrint_PROGMEM(PGM_P str);
+#endif
+#ifndef PROGMEM
+	#define PROGMEM 
+#endif
+
+#ifdef ENABLE_SOFTWARE_SERIAL
+    #include <SoftwareSerial.h>
+    // Debug Software Serial
+    SoftwareSerial static DEBUG_PORT(12, 13);//Extra2 == 12 Extra3 == 13    
+#endif
+
+/* DEBUG! */
+//#ifdef DEBUG
+const char GENERATE_BODY[]          PROGMEM = "[DEBUG] Generating Body";
+const char CALLBACK_INFO[]          PROGMEM = "[DEBUG] INFO function is being executed";
+const char CALLBACK_VALUE[]         PROGMEM = "[DEBUG] VALUE function is being executed";
+const char CALLBACK_STATE[]         PROGMEM = "[DEBUG] STATE function is being executed";
+const char GET_PIN[]                PROGMEM = "[DEBUG] The value of the pin is: ";
+const char SET_PIN[]                PROGMEM = "[DEBUG] The value of the pin has been set";
+const char THE_INFO_RESPONSE[]      PROGMEM = "[DEBUG] The response for the GET INFO requisition is: ";
+const char THE_VALUE_RESPONSE[]     PROGMEM = "[DEBUG] The response for the GET VALUE requisition is: ";
+const char THE_STATE_RESPONSE[]     PROGMEM = "[DEBUG] The response for the GET STATE requisition is: ";
+const char BODY_GENERATED[]         PROGMEM = "[DEBUG] The body generation is done";
+const char IS_A_POST[]              PROGMEM = "[DEBUG] It's a post so it doesn't have to publish anything";
+const char PUBLISHING[]             PROGMEM = "[DEBUG] Publishing...";
+const char PUBLISHED[]              PROGMEM = "[DEBUG] The message has been published";
+const char NOT_A_GET[]              PROGMEM = "[DEBUG] It isn't a GET requisition";
+const char SYSTEM[]                 PROGMEM = "[DEBUG] The system function isn't working yet";
+const char THE_RESPONSE[]           PROGMEM = "[DEBUG] The value of the response is: ";
+const char INITIATING[]             PROGMEM = "[DEBUG] Initianting the class...";
+const char FINISHED_INIT[]          PROGMEM = "[DEBUG] Finished init!";
+const char STARTING_GENERATE[]      PROGMEM = "[DEBUG] Starting generate HEADER...";
+const char ENDING_GENERATE[]        PROGMEM = "[DEBUG] Finished generate HEADER!";
+const char HEADER_STR[]             PROGMEM = "[DEBUG] HEADER Value : ";
+const char CLASS_CONSTRUCTED[]      PROGMEM = "[DEBUG] Class constructed with success!";
+const char EXEC_ERROR[]             PROGMEM = "[DEBUG] Execution Error!";
+const char EXEC_ERROR_TYPE_VAR[]    PROGMEM = "[DEBUG] Unknown variable type!";
+const char PARAM_ERROR[]            PROGMEM = "[DEBUG] Param Error!";
+const char RESPONSE_TYPE_INFO[]     PROGMEM = "[DEBUG] The response type is INFO";
+const char RESPONSE_TYPE_VALUE[]    PROGMEM = "[DEBUG] The response type is VALUE";
+const char RESPONSE_TYPE_STATE[]    PROGMEM = "[DEBUG] The response type is STATE";
+const char DOD_RETURN[]             PROGMEM = "[DEBUG] Returning the following DOD Object";
+//#endif
+
+
+extern class Debug debug;
+
+class standardStream
+{
+public:
+	//standardStream();
+
+	void print(const char* msg);
+	void println(const char* msg);
+	void print(char msg);
+	void println(char msg);
+	void print(int msg);
+	void println(int msg);
+
+};
+
+class Debug: public standardStream{
+public:
+	//Debug();
+
+	//singleton
+	static Debug& getInstance()	{
+	}
+
+};
+
+/*static void debug(char* msg);
+static void debug(const char* msg);
+//static void debug(const char str[] PROGMEM);
+static void debugln(char* msg);
+static void debugln(const char* msg);
+//static void debugln(const char str[] PROGMEM);*/
+
+
+#endif
