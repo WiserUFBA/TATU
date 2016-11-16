@@ -127,7 +127,7 @@ bool interpreter::id(char* string,unsigned int* next){
 bool interpreter::value(char* string,unsigned int* next){
     debug.println("Foi");
     
-    cmd.value = getValue[cmd.OBJ.TYPE](&string[*next]);
+    cmd.value = valueParser[cmd.OBJ.TYPE].valueFunc(&string[*next]);
     debug.println(cmd.value);
 }
 //bool interpreter::

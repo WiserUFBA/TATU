@@ -37,6 +37,8 @@ enum Kind {
     TATU_KIND_ANALOG
 };
 
+//
+
 // TATU Protocol available type codes
 enum typeCode {
     TYPE_CODE_DOD,
@@ -45,6 +47,14 @@ enum typeCode {
     TYPE_CODE_BOOL,
     TYPE_CODE_FLOW
 };
+
+typedef int (*getV)(char* V);
+typedef struct {
+    char type;
+    typeCode code;
+    getV valueFunc;
+} ValueParser;
+
 
 //the command amount
 #define dataNumber TYPE_CODE_FLOW
@@ -56,6 +66,22 @@ enum typeCode {
 #define TYPE_BOOL   'B'
 #define TYPE_FLOW   'F'
 
+///Functions to handle type
+static int getInteger(char *message){
+    return atoi_T(message);
+}
+static int getBool(char *message){
+    return message[0] == 't'? true : false;
+}
+
+const ValueParser valueParser[] = {
+        {TYPE_DOD,TYPE_CODE_DOD,NULL},
+        {TYPE_STR,TYPE_CODE_STR,NULL},
+        {TYPE_INT,TYPE_CODE_INT,getInteger},//
+        {TYPE_BOOL,TYPE_CODE_BOOL,getBool},
+        {TYPE_FLOW,TYPE_CODE_FLOW,NULL}
+};
+
 static uint8_t dataTypes[] = {
     TYPE_DOD,
     TYPE_STR,
@@ -64,11 +90,6 @@ static uint8_t dataTypes[] = {
     TYPE_FLOW
 };
 
-///Functions to handle type
-static int getInteger(char *message){
-    return atoi_T(message);
-}
-static int (*getValue[TYPE_CODE_FLOW]) (char *message) = {NULL,NULL,getInteger};
 
 // TATU Protocol available commands
 enum Commands {
