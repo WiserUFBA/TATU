@@ -23,25 +23,6 @@
 #include "Arduino.h"
 #endif
 
-// Change debug port to Software Serial Object if you want to
-/*
-#ifdef AVR_GCC
-    #define DEBUG_PORT	ATMSerial
-#endif
-// Using ESP 
-#ifdef ESP_GCC
-    #define DEBUG_PORT	ESPSerial
-#endif
-
-#ifdef PROGMEM
-    void SerialPrint_PROGMEM(PGM_P str);
-#endif
-#ifdef ENABLE_SOFTWARE_SERIAL
-    #include <SoftwareSerial.h>
-    // Debug Software Serial
-    SoftwareSerial static DEBUG_PORT(12, 13);//Extra2 == 12 Extra3 == 13    
-#endif*/
-
 // Copy property to begin of the payload array
 #define VAR_COPY(START, LEN, VECTOR) for(i = START; i < LEN; i++){ VECTOR[i-START] = VECTOR[i]; if(i+1 == LEN) VECTOR[i-START+1] = '\0'; else if(VECTOR[i] == ' ') VECTOR[i-START] = 0; }
 
@@ -49,58 +30,64 @@
 uint32_t hash_djb(char *string);
 uint8_t atoi_T(char *p);
 // TATU Protocol avaliable type variables
-enum Type {
-    TATU_TYPE_ALIAS,
-    TATU_TYPE_PIN,
-    TATU_TYPE_SYSTEM,
-    TATU_TYPE_ANALOG
+enum Kind {
+    TATU_KIND_ALIAS,
+    TATU_KIND_PIN,
+    TATU_KIND_SYSTEM,
+    TATU_KIND_ANALOG
 };
 
-// TATU Protocol available codes
-enum Code {
-    TATU_CODE_DOD,
-    TATU_CODE_STR,
-    TATU_CODE_INT,
-    TATU_CODE_BOOL,
-    TATU_CODE_FLOW
+// TATU Protocol available type codes
+enum typeCode {
+    TYPE_CODE_DOD,
+    TYPE_CODE_STR,
+    TYPE_CODE_INT,
+    TYPE_CODE_BOOL,
+    TYPE_CODE_FLOW
 };
 
 //the command amount
-#define dataNumber TATU_CODE_BOOL
+#define dataNumber TYPE_CODE_FLOW
 
 // Char that represents the TATU Protocol commands
-#define CODE_DOD    'D'
-#define CODE_STR    'S'
-#define CODE_INT    'I'
-#define CODE_BOOL   'B'
-#define CODE_FLOW   'F'
+#define TYPE_DOD    'D'
+#define TYPE_STR    'S'
+#define TYPE_INT    'I'
+#define TYPE_BOOL   'B'
+#define TYPE_FLOW   'F'
 
 static uint8_t dataTypes[] = {
-    CODE_DOD,
-    CODE_STR,
-    CODE_INT,
-    CODE_BOOL,
-    CODE_FLOW
+    TYPE_DOD,
+    TYPE_STR,
+    TYPE_INT,
+    TYPE_BOOL,
+    TYPE_FLOW
 };
+
+///Functions to handle type
+static int getInteger(char *message){
+    return atoi_T(message);
+}
+static int (*getValue[TYPE_CODE_FLOW]) (char *message) = {NULL,NULL,getInteger};
 
 // TATU Protocol available commands
 enum Commands {
-    TATU_POST,
-    TATU_SET,
-    TATU_GET,
-    TATU_FLOW,
-    TATU_EDIT
+    COMMAND_CODE_POST,
+    COMMAND_CODE_SET,
+    COMMAND_CODE_GET,
+    COMMAND_CODE_FLOW,
+    COMMAND_CODE_EDIT
 };
 
 //the command amount
-#define featNumber TATU_EDIT
+#define featNumber COMMAND_CODE_EDIT
 
 // Char that represents the TATU Protocol properties
 #define COMMAND_POST 'P'
 #define COMMAND_SET  'S'
 #define COMMAND_GET  'G'
-#define COMMAND_EDIT 'E'
 #define COMMAND_FLOW 'F'
+#define COMMAND_EDIT 'E'
 
 static uint8_t features[] = {
     COMMAND_POST,
@@ -121,15 +108,14 @@ public:
     */
     typedef union {
         struct {
-            uint8_t ERROR 	: 1;/**< Indicate if there was a error on parse*/
-            uint8_t STATE 	: 1;/**< Detailed description after the member */
+            uint8_t ERROR 	: 2;/**< Indicate if there was a error on parse*/
             uint8_t VAR 	: 6;/**< Detailed description after the member */
-            uint8_t CODE 	   ;/**< Detailed description after the member */
-            uint8_t TYPE  	   ;/**< Detailed description after the member */
+            uint8_t CODE 	   ;/**< Determine the request kind */
+            uint8_t TYPE  	   ;/**< Determine the request type(int,bool, etc...) */
             //uint8_t PIN      ;
         } OBJ;
         uint16_t STRUCTURE;
-        void* value;
+        int value;
     } Command;
 
     Command cmd; ///< Structure that represents the message semantics

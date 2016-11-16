@@ -51,7 +51,7 @@ bool interpreter::parse(char *string, unsigned int length){
         Theses are some static changes, for compatibility
     */
     cmd.STRUCTURE = 0;
-    cmd.OBJ.VAR = TATU_TYPE_ALIAS;
+    cmd.OBJ.VAR = TATU_KIND_ALIAS;
     cmd.OBJ.TYPE = 1;
 
     // <req> evaluation
@@ -84,10 +84,11 @@ bool interpreter::req(char* string,unsigned int* next){
     }
     //cout << "at least here" << endl;
     debug.println("at least here");
-    debug.println((char)features[i]);
+    //debug.println((char)features[i]);
 
     // Insert the request type in the command structure
-    cmd.OBJ.CODE = features[i];
+    cmd.OBJ.CODE = i;
+    debug.println(cmd.OBJ.CODE);
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
     debug.println(&string[*next]);
@@ -107,7 +108,10 @@ bool interpreter::type(char* string,unsigned int* next){
         return false;
     }
     debug.println("at least here");
-    debug.println((char)dataTypes[i]);
+    //debug.println((char)dataTypes[i]);
+
+    cmd.OBJ.TYPE = i;
+    debug.println(cmd.OBJ.TYPE);
 
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
@@ -116,13 +120,17 @@ bool interpreter::type(char* string,unsigned int* next){
 }
 bool interpreter::id(char* string,unsigned int* next){
     str_hash = hash_djb(&string[*next]);
+    *next = nextFunc(string,*next);
     debug.println((int)str_hash);
 } 
 
 bool interpreter::value(char* string,unsigned int* next){
     debug.println("Foi");
-    //debug.println();
+    
+    cmd.value = getValue[cmd.OBJ.TYPE](&string[*next]);
+    debug.println(cmd.value);
 }
+//bool interpreter::
 
 /*bool interpreter::code_evaluation(char code,unsigned int *j){
     switch(code){
