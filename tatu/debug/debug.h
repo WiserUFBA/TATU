@@ -70,15 +70,8 @@ class standardStream
 {
 public:
 	//standardStream();
-
-	void print(const char* msg);
-	void println(const char* msg);
-	void print(char msg);
-	void println(char msg);
-	void print(int msg);
-	void println(int msg);
-	void print(uint64_t msg);
-	void println(uint64_t msg);
+	template <typename T> 
+  	void println(T x){ cout << x << endl;};
 
 };
 
@@ -91,13 +84,5 @@ public:
 	}
 
 };
-
-/*static void debug(char* msg);
-static void debug(const char* msg);
-//static void debug(const char str[] PROGMEM);
-static void debugln(char* msg);
-static void debugln(const char* msg);
-//static void debugln(const char str[] PROGMEM);*/
-
 
 #endif

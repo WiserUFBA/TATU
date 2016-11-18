@@ -83,7 +83,7 @@ bool interpreter::req(char* string,unsigned int* next){
         return false;
     }
     //cout << "at least here" << endl;
-    debug.println("at least here");
+    debug.println("at least here1");
     //debug.println((char)features[i]);
 
     // Insert the request type in the command structure
@@ -107,11 +107,11 @@ bool interpreter::type(char* string,unsigned int* next){
     if (i == dataNumber){
         return false;
     }
-    debug.println("at least here");
+    debug.println("at least here2");
     //debug.println((char)dataTypes[i]);
 
     cmd.OBJ.TYPE = i;
-    debug.println(cmd.OBJ.TYPE);
+    debug.println(i);
 
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
