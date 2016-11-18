@@ -47,6 +47,13 @@ void standardStream::println(int str){
     cout << str << endl;
 }
 
+void standardStream::print(uint64_t str){
+    cout << str;
+}
+void standardStream::println(uint64_t str){
+    cout << str << endl;
+}
+
 /*
     Here we define the debug/print interface using polymorphism
 */

@@ -77,6 +77,8 @@ public:
 	void println(char msg);
 	void print(int msg);
 	void println(int msg);
+	void print(uint64_t msg);
+	void println(uint64_t msg);
 
 };
 

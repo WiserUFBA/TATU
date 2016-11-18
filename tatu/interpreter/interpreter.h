@@ -48,7 +48,7 @@ enum typeCode {
     TYPE_CODE_FLOW
 };
 
-typedef int (*getV)(char* V);
+typedef uint64_t (*getV)(char* V);
 typedef struct {
     char type;
     typeCode code;
@@ -67,19 +67,25 @@ typedef struct {
 #define TYPE_FLOW   'F'
 
 ///Functions to handle type
-static int getInteger(char *message){
+static uint64_t getString(char *message){
+    return (uint64_t)message;
+}
+static uint64_t getFlow(char *message){
+    return getString(message);
+}
+static uint64_t getInteger(char *message){
     return atoi_T(message);
 }
-static int getBool(char *message){
+static uint64_t getBool(char *message){
     return message[0] == 't'? true : false;
 }
 
 const ValueParser valueParser[] = {
         {TYPE_DOD,TYPE_CODE_DOD,NULL},
-        {TYPE_STR,TYPE_CODE_STR,NULL},
+        {TYPE_STR,TYPE_CODE_STR,getString},
         {TYPE_INT,TYPE_CODE_INT,getInteger},//
         {TYPE_BOOL,TYPE_CODE_BOOL,getBool},
-        {TYPE_FLOW,TYPE_CODE_FLOW,NULL}
+        {TYPE_FLOW,TYPE_CODE_FLOW,getFlow}//the flow will handle the json
 };
 
 static uint8_t dataTypes[] = {
@@ -136,7 +142,7 @@ public:
             //uint8_t PIN      ;
         } OBJ;
         uint16_t STRUCTURE;
-        int value;
+        uint64_t value;
     } Command;
 
     Command cmd; ///< Structure that represents the message semantics
