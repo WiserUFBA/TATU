@@ -88,7 +88,7 @@ bool interpreter::req(char* string,unsigned int* next){
 
     // Insert the request type in the command structure
     cmd.OBJ.CODE = i;
-    debug.println(cmd.OBJ.CODE);
+    debug.println((char)features[i]);
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
     debug.println(&string[*next]);
@@ -111,7 +111,7 @@ bool interpreter::type(char* string,unsigned int* next){
     //debug.println((char)dataTypes[i]);
 
     cmd.OBJ.TYPE = i;
-    debug.println(i);
+    debug.println((char)dataTypes[i]);
 
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
@@ -121,7 +121,7 @@ bool interpreter::type(char* string,unsigned int* next){
 bool interpreter::id(char* string,unsigned int* next){
     str_hash = hash_djb(&string[*next]);
     *next = nextFunc(string,*next);
-    debug.println((int)str_hash);
+    debug.println((uint32_t)str_hash);
 } 
 
 bool interpreter::value(char* string,unsigned int* next){

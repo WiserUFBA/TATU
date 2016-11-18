@@ -24,4 +24,4 @@ const char COMMAND_RECEIVED[]   PROGMEM = "[DEBUG] Command received: ";
 const char REQUISITION_ERROR[]  PROGMEM = "[DEBUG] Requisition ERROR";
 const char ALL_ERROR[]          PROGMEM = "[DEBUG] The ALL function isn't working yet";
 
-Debug debug;
+Debug debug(&Serial);

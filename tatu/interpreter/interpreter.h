@@ -13,7 +13,7 @@
 #endif
 #include <stdint.h>
 
-
+//#define AVR_GCC
 #ifdef AVR_GCC
 #include "Arduino.h"
 #include <avr/pgmspace.h>
@@ -68,6 +68,7 @@ typedef struct {
 
 ///Functions to handle type
 static uint64_t getString(char *message){
+    debug.println("String");
     return (uint64_t)message;
 }
 static uint64_t getFlow(char *message){

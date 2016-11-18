@@ -2,10 +2,15 @@
 #define debug_h
 
 //#define DEBUG 1
+
+
+#ifdef virtualDev
 #include <iostream>
+#endif
 #include <stdint.h>
 using namespace std;
 // Change debug port to Software Serial Object if you want to
+#define AVR_GCC
 #ifdef AVR_GCC
 	#include "Arduino.h"
     #define DEBUG_PORT	ATMSerial
@@ -66,15 +71,16 @@ const char DOD_RETURN[]             PROGMEM = "[DEBUG] Returning the following D
 
 extern class Debug debug;
 
-class standardStream
-{
+#ifdef virtualDev
+class standardStream{
 public:
 	//standardStream();
-	template <typename T> 
   	void println(T x){ cout << x << endl;};
 
 };
+#endif
 
+#ifdef virtualDev
 class Debug: public standardStream{
 public:
 	//Debug();
@@ -84,5 +90,29 @@ public:
 	}
 
 };
+#endif
+#ifdef AVR_GCC
+class Debug{
+public:
+	//Debug();
+	//singleton
+	Debug(Stream* s){
+		m_dev = s;
+	}
+	template <typename T> 
+	void println(T x){ m_dev->println(x);};
+	static Debug& getInstance()	{
+	}
+
+protected:
+	Stream* m_dev;
+	 
+	virtual size_t write(uint8_t c) { return (m_dev->write(c)); }
+	virtual int available(void) { return (m_dev->available()); }
+	virtual int peek(void) { return (m_dev->peek()); }
+	virtual int read(void) { return (m_dev->read()); }
+	virtual void flush(void) { m_dev->flush(); }
+};
+#endif
 
 #endif
