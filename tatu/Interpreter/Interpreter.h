@@ -1,16 +1,16 @@
 #ifndef interpreter_h
 #define interpreter_h
 
-//#define AVR_GCC
 
 // Uncomment the follow line to show debug
-#define DEBUG
+//#define DEBUG
+//#define AVR_GCC
 
 //#define ENABLE_SOFTWARE_SERIAL
 
-#ifdef DEBUG
+//#ifdef DEBUG
 #include "debug.h"
-#endif
+//#endif
 #include <stdint.h>
 
 //#define AVR_GCC
@@ -48,14 +48,6 @@ enum typeCode {
     TYPE_CODE_FLOW
 };
 
-typedef uint64_t (*getV)(char* V);
-typedef struct {
-    char type;
-    typeCode code;
-    getV valueFunc;
-} ValueParser;
-
-
 //the command amount
 #define dataNumber TYPE_CODE_FLOW
 
@@ -80,6 +72,17 @@ static uint64_t getInteger(char *message){
 static uint64_t getBool(char *message){
     return message[0] == 't'? true : false;
 }
+
+typedef uint64_t (*getV)(char* V);
+
+/*
+ * This struct is used to properly handle the value extraction
+*/
+typedef struct {
+    char type;///< The first character of the type
+    typeCode code;///< The code that represents the type
+    getV valueFunc;///< The function tha handle the extraction
+} ValueParser;
 
 const ValueParser valueParser[] = {
         {TYPE_DOD,TYPE_CODE_DOD,NULL},
@@ -126,13 +129,12 @@ static uint8_t features[] = {
 };
 
 
-class interpreter{
+class Interpreter{
 private:
 
 public:
     /**
-     * and now
-     * what?
+     * Structure that represents the message semantics
     */
     typedef union {
         struct {
@@ -147,8 +149,8 @@ public:
     } Command;
 
     Command cmd; ///< Structure that represents the message semantics
-    uint32_t str_hash; ///< Hash that identifies the sensor/actuator requested by the client
-    interpreter(){
+    uint32_t str_hash; ///< Hash that identifies thse sensor/actuator requested by the client
+    Interpreter(){
         cmd.OBJ.ERROR = true;
         // Enable Software Serial Debug port if it's not already started 
         #ifdef ENABLE_SOFTWARE_SERIAL

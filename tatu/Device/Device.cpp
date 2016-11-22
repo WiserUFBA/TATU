@@ -1,4 +1,4 @@
-#include "tatu.h"
+#include "Device.h"
 
 #ifdef AVR_GCC
 #define //debugString(VAR) const char VAR[] PROGMEM
@@ -31,7 +31,7 @@ const char res_str[]    PROGMEM = "/RES";
 const char flow_str[]   PROGMEM = "/FLOW";
 
 
-tatu::tatu( const char *name_d, interpreter *req, bool (*GET_FUNCTION)(uint32_t hash, void* response, uint8_t code), 
+Device::Device( const char *name_d, Interpreter *req, bool (*GET_FUNCTION)(uint32_t hash, void* response, uint8_t code), 
                         bool (*SET_FUNCTION)(uint32_t hash, uint8_t code, void* request), void (*PUBLISH)(char *, char *)){
     get_function = GET_FUNCTION;
     set_function = SET_FUNCTION;
@@ -40,8 +40,9 @@ tatu::tatu( const char *name_d, interpreter *req, bool (*GET_FUNCTION)(uint32_t 
 }
 
 /* Initialize the class */
-void tatu::init(  const char *name_d, interpreter *req){
-    cli();
+void Device::init(  const char *name_d, Interpreter *req){
+    
+    //cli();//stop interruptions on arduino
     int i;
 
     // Define basic attributes
@@ -56,7 +57,7 @@ void tatu::init(  const char *name_d, interpreter *req){
 
     // Gera o header padrão e coloca no output_message atualizando a posição final do header
     generateHeader();
-    sei();
+    //sei();
 
     dod_used = false;
 
@@ -67,7 +68,7 @@ void tatu::init(  const char *name_d, interpreter *req){
 }
 
 /* Generate the header post */
-void tatu::generateHeader(){
+void Device::generateHeader(){
     /* Auxiliary variable */
     int aux;
 
@@ -100,7 +101,8 @@ void tatu::generateHeader(){
     last_char = aux;
 }
 
-void tatu::generateBody(char *payload, uint8_t length){
+#define APAGA
+void Device::generateBody(char *payload, uint8_t length){
 
 	/*
 		@response is a pointer to the reponse returned by @get_funtcion()
@@ -116,8 +118,9 @@ void tatu::generateBody(char *payload, uint8_t length){
 
 	int aux = last_char;
 
+    #ifndef APAGA
     /*
-    	The interpreter recieves the incoming requisition(@payload) and parses it
+    	The Interpreter recieves the incoming requisition(@payload) and parses it
     	if it's not a well formed tatu message the body becames BODY:"null"
 	*/
     if(!requisition->parse(payload, length)){ cpyStrConstant(OUT_STR, null_body); return; }
@@ -249,17 +252,18 @@ void tatu::generateBody(char *payload, uint8_t length){
     */
     BRACE_RIGHT; BRACE_RIGHT;
     CLOSE_MSG;
+    #endif
     
     //debugln(BODY_GENERATED);
     
 }
 
 /* Function to abstract some low-level publishing action */
-void tatu::callback(char *topic, byte *payload, unsigned int length){
+void Device::callback(char *topic, byte *payload, unsigned int length){
     /* Generate the body */
     generateBody((char *) payload, (uint8_t) length);
 
-    if(requisition->cmd.OBJ.TYPE == TATU_POST){
+    if(requisition->cmd.OBJ.TYPE == COMMAND_POST){
         //debugln(IS_A_POST);
         return;
     }
@@ -310,7 +314,7 @@ void //debugln(const char str[] PROGMEM){
 #endif
 }*/
 
-void tatu::sucess_message(int aux){
+void Device::sucess_message(int aux){
      //debugln(NOT_A_GET);
     
     cpyStrConstant(OUT_STR, true_str);
@@ -322,7 +326,7 @@ void tatu::sucess_message(int aux){
     return;
 }
 
-void tatu::error_message(int aux){
+void Device::error_message(int aux){
     //debugln(PARAM_ERROR);
 
     cpyStrConstant(OUT_STR, null_str);
@@ -333,13 +337,13 @@ void tatu::error_message(int aux){
     CLOSE_MSG;
     return;
 }
-void tatu::tatu_get(void* buffer){
+void Device::tatu_get(void* buffer){
     requisition->cmd.OBJ.ERROR = !get_function(requisition->str_hash,buffer,requisition->cmd.OBJ.CODE);
 }
-void tatu::tatu_set(void* request){
+void Device::tatu_set(void* request){
     requisition->cmd.OBJ.ERROR = !set_function(requisition->str_hash, requisition->cmd.OBJ.CODE, request);
 }
-void tatu::tatu_flow(void* request){
+void Device::tatu_flow(void* request){
 	requisition->cmd.OBJ.ERROR = !flow_function(requisition->str_hash,requisition->cmd.OBJ.CODE,request);
 }
 int foo(){

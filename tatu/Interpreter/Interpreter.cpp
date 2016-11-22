@@ -1,4 +1,4 @@
-#include "interpreter.h"
+#include "Interpreter.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +31,7 @@ uint8_t atoi_T(char *p){
 }
 
 /* Parse TATU and return if this fail or not */
-bool interpreter::parse(char *string, unsigned int length){
+bool Interpreter::parse(char *string, unsigned int length){
     
     
     /*
@@ -70,7 +70,7 @@ bool interpreter::parse(char *string, unsigned int length){
 }
 
 //verify requisiton type
-bool interpreter::req(char* string,unsigned int* next){
+bool Interpreter::req(char* string,unsigned int* next){
     int i;
 
     /* 
@@ -95,7 +95,7 @@ bool interpreter::req(char* string,unsigned int* next){
 
     return true;
 }
-bool interpreter::type(char* string,unsigned int* next){
+bool Interpreter::type(char* string,unsigned int* next){
     int i;
 
     /* 
@@ -118,69 +118,16 @@ bool interpreter::type(char* string,unsigned int* next){
     debug.println(&string[*next]);
     return true;
 }
-bool interpreter::id(char* string,unsigned int* next){
+bool Interpreter::id(char* string,unsigned int* next){
     str_hash = hash_djb(&string[*next]);
     *next = nextFunc(string,*next);
     debug.println((uint32_t)str_hash);
 } 
 
-bool interpreter::value(char* string,unsigned int* next){
+bool Interpreter::value(char* string,unsigned int* next){
     
     debug.println("Foi");
     cmd.value = valueParser[cmd.OBJ.TYPE].valueFunc(&string[*next]);
     
     debug.println((char*)cmd.value);
 }
-//bool interpreter::
-
-/*bool interpreter::code_evaluation(char code,unsigned int *j){
-    switch(code){
-        case CODE_DOD:
-            #ifdef DEBUG
-            PRINT_DEBUG(FOUND_DOD);
-            DEBUG_NL();
-            //PRINT_DEBUG(ALL_ERROR);
-            //DEBUG_NL();
-            #endif
-            cmd.OBJ.CODE = TATU_CODE_DOD;
-            break;
-        case CODE_STR:
-            #ifdef DEBUG
-            PRINT_DEBUG(FOUND_INFO);
-            DEBUG_NL();
-            #endif
-            cmd.OBJ.CODE = TATU_CODE_STR;
-            break; 
-        case CODE_BOOL:
-            #ifdef DEBUG
-            PRINT_DEBUG(FOUND_STATE);
-            DEBUG_NL();
-            #endif
-            cmd.OBJ.CODE = TATU_CODE_BOOL;
-            *j += 1;
-            break; 
-        case CODE_INT:
-            #ifdef DEBUG
-            PRINT_DEBUG(FOUND_VALUE);
-            DEBUG_NL();
-            #endif
-            cmd.OBJ.CODE = TATU_CODE_INT;
-            *j += 1;
-           break;
-        case CODE_FLOW:
-            #ifdef DEBUG
-            PRINT_DEBUG(FOUND_FLOW_PUB);
-            DEBUG_NL();
-            #endif
-            cmd.OBJ.CODE = TATU_CODE_FLOW;
-            break; 
-        default:
-            #ifdef DEBUG
-            PRINT_DEBUG(CODE_ERROR);
-            DEBUG_NL();
-            #endif
-            /* If the desired command is not found return error */
-            /*return false;
-    }
-    return true;
-}*/

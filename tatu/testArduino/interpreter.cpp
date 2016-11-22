@@ -1,1 +1,0 @@
-/home/ramon/tatu/interpreter/interpreter.cpp

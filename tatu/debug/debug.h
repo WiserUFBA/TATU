@@ -1,8 +1,9 @@
 #ifndef debug_h
 #define debug_h
 
-//#define DEBUG 1
-
+#define DEBUG
+//#define AVR_GCC
+#define virtualDev
 
 #ifdef virtualDev
 #include <iostream>
@@ -10,7 +11,6 @@
 #include <stdint.h>
 using namespace std;
 // Change debug port to Software Serial Object if you want to
-#define AVR_GCC
 #ifdef AVR_GCC
 	#include "Arduino.h"
     #define DEBUG_PORT	ATMSerial
@@ -75,6 +75,7 @@ extern class Debug debug;
 class standardStream{
 public:
 	//standardStream();
+	template <typename T> 
   	void println(T x){ cout << x << endl;};
 
 };
@@ -100,7 +101,11 @@ public:
 		m_dev = s;
 	}
 	template <typename T> 
-	void println(T x){ m_dev->println(x);};
+	void println(T x){ 
+		#ifdef DEBUG
+		m_dev->println(x);
+		#endif
+	};
 	static Debug& getInstance()	{
 	}
 

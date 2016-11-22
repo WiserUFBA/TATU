@@ -1,11 +1,12 @@
-#ifndef tatu_h
-#define tatu_h
+#ifndef Device_h
+#define Device_h
 
 #include <stdint.h>
-#include <interpreter.h>
-#include <debug.h>
-#include "Arduino.h"
+#include "Interpreter.h"
+#include "debug.h"
+#include <string.h>
 #ifdef AVR_GCC
+#include "Arduino.h"
 #include <avr/wdt.h>
 #endif
 
@@ -50,10 +51,10 @@ typedef uint8_t byte;
                                         // Declares bridge function
 #define MQTT_BRIDGE(BRIDGE)             void BRIDGE(char *, char *)
                                         // Declaração da ponte// Função callback chamada pelo cliente mqtt  
-#define MQTT_CALLBACK(OBJ, NAME) void NAME(char *topic, byte *payload, unsigned int length)\ 
+#define MQTT_CALLBACK(OBJ, NAME) void NAME(char *topic, byte *payload, unsigned int length) \
                                         {OBJ.callback(topic, payload, length);}// Essa é a atribuição da função acionada dentro do objeto TATUDevice
                                         // Atribuição da ponte
-#define MQTT_PUBLISH(BRIDGE, OBJ)       void BRIDGE(char *topic, char *out)\ 
+#define MQTT_PUBLISH(BRIDGE, OBJ)       void BRIDGE(char *topic, char *out) \
                                         { OBJ.publish(topic,out); } // Essa é a função publish do cliente que será chama pelo objeto
 
 // Macros para conversão de tipos
@@ -68,7 +69,7 @@ void cpyStrConstant(char* destination, const char* source );
 void error_message(int aux);
 void sucess_message(int aux);
 
-class tatu{
+class Device{
 public:
     // Atributos públicos
     // Atributos do sistema
@@ -82,7 +83,7 @@ public:
     bool (*flow_function)(uint32_t hash, uint8_t code, void* response);
     void (*pub)(char *, char *);
     // Atributos variaveis
-    interpreter *requisition;
+    Interpreter *requisition;
 
     /* TEORICO */
     /* uint8_t reset_counter;
@@ -96,10 +97,10 @@ public:
     // Callback MQTT
     void callback(char *, byte *, unsigned int);
     
-    tatu( const char *name_d, interpreter *req, bool (*GET_FUNCTION)(uint32_t hash, void* response, uint8_t code), 
+    Device( const char *name_d, Interpreter *req, bool (*GET_FUNCTION)(uint32_t hash, void* response, uint8_t code), 
                         bool (*SET_FUNCTION)(uint32_t hash, uint8_t code, void* request), void (*PUBLISH)(char *, char *));
 
-    void init(  const char *name_d, interpreter *req); 
+    void init(  const char *name_d, Interpreter *req); 
 
     //
 	void tatu_get(void* buffer);
