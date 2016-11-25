@@ -114,7 +114,7 @@ enum Commands {
 #define featNumber COMMAND_CODE_EDIT
 
 // Char that represents the TATU Protocol properties
-#define COMMAND_POST 'P'
+#define COMMAND_POST 'Q'
 #define COMMAND_SET  'S'
 #define COMMAND_GET  'G'
 #define COMMAND_FLOW 'F'
@@ -132,26 +132,26 @@ static uint8_t features[] = {
 class Interpreter{
 private:
 
-public:
     /**
      * Structure that represents the message semantics
     */
-    typedef union {
-        struct {
-            uint8_t ERROR 	: 2;/**< Indicate if there was a error on parse*/
-            uint8_t VAR 	: 6;/**< Detailed description after the member */
-            uint8_t CODE 	   ;/**< Determine the request kind */
-            uint8_t TYPE  	   ;/**< Determine the request type(int,bool, etc...) */
-            //uint8_t PIN      ;
-        } OBJ;
+    typedef struct {
+        //struct {
+        uint8_t ERROR;/**< Indicate if there was a error on parse*/
+        uint8_t VAR;/**< Detailed description after the member */
+        uint8_t CODE;/**< Determine the request kind */
+        uint8_t TYPE;/**< Determine the request type(int,bool, etc...) */
+        //} OBJ;
         uint16_t STRUCTURE;
         uint64_t value;
     } Command;
+public:
+
 
     Command cmd; ///< Structure that represents the message semantics
     uint32_t str_hash; ///< Hash that identifies thse sensor/actuator requested by the client
     Interpreter(){
-        cmd.OBJ.ERROR = true;
+        cmd.ERROR = true;
         // Enable Software Serial Debug port if it's not already started 
         #ifdef ENABLE_SOFTWARE_SERIAL
         DEBUG_PORT.begin(DEBUG_PORT_SPEED);
@@ -193,6 +193,8 @@ public:
       * \return boolean value that represents the validity of the message
     */
     bool value(char* ,unsigned int* );
+
+    //void setCode(uint8_t );
 };
 
 #endif

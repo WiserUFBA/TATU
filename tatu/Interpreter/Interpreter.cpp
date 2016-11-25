@@ -51,8 +51,8 @@ bool Interpreter::parse(char *string, unsigned int length){
         Theses are some static changes, for compatibility
     */
     cmd.STRUCTURE = 0;
-    cmd.OBJ.VAR = TATU_KIND_ALIAS;
-    cmd.OBJ.TYPE = 1;
+    cmd.VAR = TATU_KIND_ALIAS;
+    cmd.TYPE = 1;
 
     // <req> evaluation
     if (!req(string,&next)) return false;
@@ -62,10 +62,11 @@ bool Interpreter::parse(char *string, unsigned int length){
     id(string,&next);
 
     // If is a "GET" there is no extra value
-    if(cmd.OBJ.CODE != COMMAND_GET)
+    if(cmd.CODE != COMMAND_GET)
         if (!value(string,&next)) return false;
 
-
+    //cmd.CODE = 3;
+    debug.println((int)cmd.CODE);
     return true;
 }
 
@@ -77,7 +78,7 @@ bool Interpreter::req(char* string,unsigned int* next){
         check if the requisition's first letter belongs to 
         the list of characters of the protocol requisitions
     */
-    for ( i = 0; i < featNumber && (features[i] != string[0]) ; i++);
+    for ( i = 0; i < featNumber && (features[i] != string[0]) ; debug.println(i), i++);
 
     if (i == featNumber){
         return false;
@@ -87,8 +88,9 @@ bool Interpreter::req(char* string,unsigned int* next){
     //debug.println((char)features[i]);
 
     // Insert the request type in the command structure
-    cmd.OBJ.CODE = i;
-    debug.println((char)features[i]);
+    cmd.CODE = (uint8_t)i;
+    //debug.println((char)features[i]);
+    debug.println((int)cmd.CODE);
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
     debug.println(&string[*next]);
@@ -110,7 +112,7 @@ bool Interpreter::type(char* string,unsigned int* next){
     debug.println("at least here2");
     //debug.println((char)dataTypes[i]);
 
-    cmd.OBJ.TYPE = i;
+    cmd.TYPE = (uint8_t)i;
     debug.println((char)dataTypes[i]);
 
     // Atributtes the size of this part to find the next requisition's string
@@ -122,12 +124,16 @@ bool Interpreter::id(char* string,unsigned int* next){
     str_hash = hash_djb(&string[*next]);
     *next = nextFunc(string,*next);
     debug.println((uint32_t)str_hash);
+    return true;
 } 
 
 bool Interpreter::value(char* string,unsigned int* next){
     
     debug.println("Foi");
-    cmd.value = valueParser[cmd.OBJ.TYPE].valueFunc(&string[*next]);
+    cmd.value = valueParser[cmd.TYPE].valueFunc(&string[*next]);
     
     debug.println((char*)cmd.value);
+    return true;
 }
+
+

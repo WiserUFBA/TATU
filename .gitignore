@@ -1,3 +1,6 @@
+# qtcreator files
+*.pro*
+
 # Documentation folders
 *html
 *latex

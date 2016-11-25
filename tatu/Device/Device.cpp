@@ -118,24 +118,26 @@ void Device::generateBody(char *payload, uint8_t length){
 
 	int aux = last_char;
 
-    #ifndef APAGA
     /*
     	The Interpreter recieves the incoming requisition(@payload) and parses it
     	if it's not a well formed tatu message the body becames BODY:"null"
 	*/
     if(!requisition->parse(payload, length)){ cpyStrConstant(OUT_STR, null_body); return; }
 
-	 /* Check the requisiton type*/
-    switch(requisition->cmd.OBJ.TYPE){
-    	case TATU_GET:
+     /* Check the requisiton type*/
+    switch((int)requisition->cmd.CODE){
+        case COMMAND_CODE_GET:
     		tatu_get(buffer);
     		break;
-    	case TATU_SET:
+        case COMMAND_CODE_SET:
     		tatu_set(&payload[strlen(payload)+1]);
     		break;
-    	case TATU_FLOW:
+        case COMMAND_CODE_FLOW:
     		tatu_flow(&payload[strlen(payload)+1]);
     		break;
+        default:
+            debug.println((int)requisition->cmd.CODE);
+            debug.println("DEFAULT");
     }
 
     /*
@@ -154,18 +156,19 @@ void Device::generateBody(char *payload, uint8_t length){
     aux += 9;
     //	it's value
     QUOTE;
-    switch(requisition->cmd.OBJ.TYPE){
-        case TATU_GET:
+    switch((int)requisition->cmd.CODE){
+        case COMMAND_CODE_GET:
             cpyStrConstant(OUT_STR, method_get);
             aux += 3;
             break;
-        case TATU_SET:
+        case COMMAND_CODE_SET:
             cpyStrConstant(OUT_STR, method_set);
             aux += 3;
             break;
     }
     QUOTE; COMMA;
 
+#ifndef APAGA
     /* 
     	Inserts the body property: ( "BODY":{ )
     */
@@ -191,7 +194,7 @@ void Device::generateBody(char *payload, uint8_t length){
             "lamp":false
         <example> 
     */
-    if(requisition->cmd.OBJ.ERROR){ 
+    if(requisition->cmd.ERROR){
         return error_message(aux);
     }
 
@@ -203,7 +206,7 @@ void Device::generateBody(char *payload, uint8_t length){
             "airConditioner":true
         <example> 
     */
-    if(requisition->cmd.OBJ.TYPE != TATU_GET){
+    if(requisition->cmd.TYPE != TATU_GET){
         return sucess_message(aux);  
     }
 
@@ -215,7 +218,7 @@ void Device::generateBody(char *payload, uint8_t length){
             response: "temperatureSensor":25
         </example>
     */
-    switch(requisition->cmd.OBJ.CODE) {
+    switch(requisition->cmd.CODE) {
         case TATU_CODE_FLOW:
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
@@ -246,13 +249,13 @@ void Device::generateBody(char *payload, uint8_t length){
     //debug(THE_RESPONSE);
     //debugln(str_buffer);
     
+#endif
     /*
         the last part closes the json message:
         "BODY":{"temperatureSensor":32 + }}
     */
     BRACE_RIGHT; BRACE_RIGHT;
     CLOSE_MSG;
-    #endif
     
     //debugln(BODY_GENERATED);
     
@@ -263,7 +266,7 @@ void Device::callback(char *topic, byte *payload, unsigned int length){
     /* Generate the body */
     generateBody((char *) payload, (uint8_t) length);
 
-    if(requisition->cmd.OBJ.TYPE == COMMAND_POST){
+    if(requisition->cmd.TYPE == COMMAND_POST){
         //debugln(IS_A_POST);
         return;
     }
@@ -338,13 +341,14 @@ void Device::error_message(int aux){
     return;
 }
 void Device::tatu_get(void* buffer){
-    requisition->cmd.OBJ.ERROR = !get_function(requisition->str_hash,buffer,requisition->cmd.OBJ.CODE);
+    requisition->cmd.ERROR = !get_function(requisition->str_hash,buffer,requisition->cmd.CODE);
 }
 void Device::tatu_set(void* request){
-    requisition->cmd.OBJ.ERROR = !set_function(requisition->str_hash, requisition->cmd.OBJ.CODE, request);
+    debug.println("Esse set!");
+    requisition->cmd.ERROR = !set_function(requisition->str_hash, requisition->cmd.CODE, request);
 }
 void Device::tatu_flow(void* request){
-	requisition->cmd.OBJ.ERROR = !flow_function(requisition->str_hash,requisition->cmd.OBJ.CODE,request);
+    requisition->cmd.ERROR = !flow_function(requisition->str_hash,requisition->cmd.CODE,request);
 }
 int foo(){
     return 3;
