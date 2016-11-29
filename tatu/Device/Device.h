@@ -5,9 +5,13 @@
 #include "Interpreter.h"
 #include "debug.h"
 #include <string.h>
+#include <string>
 #ifdef AVR_GCC
 #include "Arduino.h"
 #include <avr/wdt.h>
+#endif
+#ifdef virtualDev
+#include <stdio.h>
 #endif
 
 typedef uint8_t byte;
@@ -109,6 +113,8 @@ public:
 
     void sucess_message(int aux);
     void error_message(int aux);
+
+    int cpyVar(const char* payload, int aux);
 
     void generateHeader();
     void generateBody(char *payload, uint8_t length);

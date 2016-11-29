@@ -8,11 +8,11 @@
 #endif
 
 // Constantes
-const char start_post[] PROGMEM = "{\"CODE\":\"POST\"";
+const char post[] PROGMEM = "\"CODE\":\"POST\"";
 const char null_body[]  PROGMEM = "\"BODY\":null}";
 const char true_body[]  PROGMEM = "\"BODY\":true}";
 const char false_body[] PROGMEM = "\"BODY\":false}";
-const char header_str[] PROGMEM = "\"HEADER\":{";
+const char header_str[] PROGMEM = "{\"HEADER\":{";
 const char name_str[]   PROGMEM = "\"NAME\":\"";
 const char id_str[]     PROGMEM = "\"ID\":";
 const char pan_str[]    PROGMEM = "\"PAN\":";
@@ -72,16 +72,12 @@ void Device::generateHeader(){
     /* Auxiliary variable */
     int aux;
 
-    // Primeiro se coloca a seguinte string padrão no vetor
-    cpyStrConstant(output_message, start_post);
     
-    // Starts JSON
-    aux = strlen(start_post);
-    COMMA;
     
     // The next lines builds the HEADER
     cpyStrConstant(OUT_STR, header_str); /* Copies the "HEADER" string*/
-    aux += 10;
+    aux += 11;
+
     
     /* Inserts NAME */
     cpyStrConstant(OUT_STR, name_str);
@@ -89,6 +85,10 @@ void Device::generateHeader(){
     strcpy(OUT_STR, name);
     aux += strlen(name);
     QUOTE; COMMA;
+
+    // POST
+    cpyStrConstant(OUT_STR, post);
+    aux += strlen(post);
 
     /* Closes the header */
     BRACE_RIGHT; COMMA;
@@ -104,17 +104,10 @@ void Device::generateHeader(){
 #define APAGA
 void Device::generateBody(char *payload, uint8_t length){
 
-	/*
-		@response is a pointer to the reponse returned by @get_funtcion()
-		@request is a pointer to the value of the request sended to @set_funtcion()
-		@str_buffer buffer used to store string responses
-		@aux indicates the index of the last message's character edited
-	*/
-   	void *response;
-   	void *request;
-
-    char str_buffer[MAX_SIZE_RESPONSE] = {0};
-    char buffer[MAX_SIZE_RESPONSE] = {0};//?
+   	void *response;///< is a pointer to the reponse returned by @get_funtcion()
+   	void *request;///< is a pointer to the value of the request sended to @set_funtcion()
+    char str_buffer[MAX_SIZE_RESPONSE] = {0};///< buffer used to store string responses
+    char buffer[MAX_SIZE_RESPONSE] = {0};///< indicates the index of the last message's character edited
 
 	int aux = last_char;
 
@@ -127,13 +120,13 @@ void Device::generateBody(char *payload, uint8_t length){
      /* Check the requisiton type*/
     switch((int)requisition->cmd.CODE){
         case COMMAND_CODE_GET:
-    		tatu_get(buffer);
+            tatu_get(buffer);
     		break;
         case COMMAND_CODE_SET:
-    		tatu_set(&payload[strlen(payload)+1]);
+            tatu_set(&payload[strlen(payload)+1]);
     		break;
         case COMMAND_CODE_FLOW:
-    		tatu_flow(&payload[strlen(payload)+1]);
+            tatu_flow(&payload[strlen(payload)+1]);
     		break;
         default:
             debug.println((int)requisition->cmd.CODE);
@@ -168,7 +161,6 @@ void Device::generateBody(char *payload, uint8_t length){
     }
     QUOTE; COMMA;
 
-#ifndef APAGA
     /* 
     	Inserts the body property: ( "BODY":{ )
     */
@@ -182,7 +174,8 @@ void Device::generateBody(char *payload, uint8_t length){
             adds the following json property "lamp":
         </example>
     */
-    QUOTE; strcpy(OUT_STR, payload); aux += strlen(payload); QUOTE; COLON;
+    QUOTE; aux = cpyVar((const char*)requisition->cmd.object,aux); QUOTE; COLON;
+
 	
     /*
         Checks if has ocurred a error when trying to attend the request
@@ -200,13 +193,13 @@ void Device::generateBody(char *payload, uint8_t length){
 
     /*
         If the only return needed is if it was sucessful or not
-        and its was a succes atrributes the true value to the property
+        and it was a succes, atrributes the true value to the property
 
         <example>
             "airConditioner":true
         <example> 
     */
-    if(requisition->cmd.TYPE != TATU_GET){
+    if(requisition->cmd.CODE != COMMAND_CODE_GET){
         return sucess_message(aux);  
     }
 
@@ -219,23 +212,21 @@ void Device::generateBody(char *payload, uint8_t length){
         </example>
     */
     switch(requisition->cmd.CODE) {
-        case TATU_CODE_FLOW:
+        case TYPE_CODE_FLOW:
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
             break;
-        case TATU_CODE_STR:    
+        case TYPE_CODE_STR:
             QUOTE; strcpy(OUT_STR, buffer); aux+=strlen(buffer); QUOTE;
-            
             //debugln(RESPONSE_TYPE_INFO);
             break;
-        case TATU_CODE_INT:
-            itoa((int)buffer,buffer,10);
+        case TYPE_CODE_INT:
+            sprintf(buffer,"%d",*(int*)buffer);//change to sprintf
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
-            
             //debugln(RESPONSE_TYPE_VALUE);
             break;
-        case TATU_CODE_BOOL:
+        case TYPE_CODE_BOOL:
             if ((bool)buffer)  cpyStrConstant(buffer, true_str);
             else cpyStrConstant(buffer, false_str);
             strcpy(OUT_STR, buffer);
@@ -248,6 +239,7 @@ void Device::generateBody(char *payload, uint8_t length){
     // //Debug that shows the response returned by @get_funcion
     //debug(THE_RESPONSE);
     //debugln(str_buffer);
+#ifndef APAGA
     
 #endif
     /*
@@ -259,6 +251,12 @@ void Device::generateBody(char *payload, uint8_t length){
     
     //debugln(BODY_GENERATED);
     
+}
+
+int Device::cpyVar(const char *payload,int aux){
+    int i;
+    for(i = 0; payload[i] != '\0' && payload[i] != ' ' ;*OUT_STR = payload[i++],aux++);
+    return aux;
 }
 
 /* Function to abstract some low-level publishing action */
@@ -288,37 +286,8 @@ void Device::callback(char *topic, byte *payload, unsigned int length){
     // <///debug>
 }
 
-/*
-    Here we define the //debug/print interface using polymorphism
-*/
-/*void //debug(char* msg){
-#ifdef //DEBUG
-    Serial.print(msg);
-#endif
-}
-void //debug(const char str[] PROGMEM){
-#ifdef //DEBUG
-    SerialPrint_PROGMEM(str);
-    Serial.println();
-#endif
-}*/
-/*
-    The "break-line" prints
-*/
-/*void //debugln(char* msg){
-#ifdef //DEBUG
-    Serial.println(msg);
-#endif
-}
-void //debugln(const char str[] PROGMEM){
-#ifdef //DEBUG
-    SerialPrint_PROGMEM(str);
-    Serial.println();
-#endif
-}*/
-
 void Device::sucess_message(int aux){
-     //debugln(NOT_A_GET);
+     debug.println(NOT_A_GET);
     
     cpyStrConstant(OUT_STR, true_str);
     aux += 4;

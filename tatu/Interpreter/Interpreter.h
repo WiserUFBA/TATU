@@ -67,7 +67,8 @@ static uint64_t getFlow(char *message){
     return getString(message);
 }
 static uint64_t getInteger(char *message){
-    return atoi_T(message);
+    debug.println("Integer");
+    return (uint64_t)atoi_T(message);
 }
 static uint64_t getBool(char *message){
     return message[0] == 't'? true : false;
@@ -143,7 +144,8 @@ private:
         uint8_t TYPE;/**< Determine the request type(int,bool, etc...) */
         //} OBJ;
         uint16_t STRUCTURE;
-        uint64_t value;
+        uint64_t object;
+        uint64_t value;/**< Determine the message value*/
     } Command;
 public:
 

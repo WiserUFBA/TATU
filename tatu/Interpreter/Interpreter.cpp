@@ -122,6 +122,7 @@ bool Interpreter::type(char* string,unsigned int* next){
 }
 bool Interpreter::id(char* string,unsigned int* next){
     str_hash = hash_djb(&string[*next]);
+    cmd.object = (uint64_t)&string[*next];
     *next = nextFunc(string,*next);
     debug.println((uint32_t)str_hash);
     return true;
@@ -131,8 +132,8 @@ bool Interpreter::value(char* string,unsigned int* next){
     
     debug.println("Foi");
     cmd.value = valueParser[cmd.TYPE].valueFunc(&string[*next]);
-    
-    debug.println((char*)cmd.value);
+    debug.println("Isso");
+    //debug.println((char*)cmd.value);
     return true;
 }
 
