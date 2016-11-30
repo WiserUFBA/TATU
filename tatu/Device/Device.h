@@ -6,6 +6,7 @@
 #include "debug.h"
 #include <string.h>
 #include <string>
+#include "sensor.h"
 #ifdef AVR_GCC
 #include "Arduino.h"
 #include <avr/wdt.h>

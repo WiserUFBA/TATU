@@ -211,7 +211,7 @@ void Device::generateBody(char *payload, uint8_t length){
             response: "temperatureSensor":25
         </example>
     */
-    switch(requisition->cmd.CODE) {
+    switch(requisition->cmd.TYPE) {
         case TYPE_CODE_FLOW:
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
@@ -239,9 +239,7 @@ void Device::generateBody(char *payload, uint8_t length){
     // //Debug that shows the response returned by @get_funcion
     //debug(THE_RESPONSE);
     //debugln(str_buffer);
-#ifndef APAGA
-    
-#endif
+
     /*
         the last part closes the json message:
         "BODY":{"temperatureSensor":32 + }}
@@ -310,7 +308,7 @@ void Device::error_message(int aux){
     return;
 }
 void Device::tatu_get(void* buffer){
-    requisition->cmd.ERROR = !get_function(requisition->str_hash,buffer,requisition->cmd.CODE);
+    requisition->cmd.ERROR = !get_function(requisition->str_hash,buffer,requisition->cmd.TYPE);
 }
 void Device::tatu_set(void* request){
     debug.println("Esse set!");
