@@ -1,9 +1,13 @@
 #ifndef debug_h
 #define debug_h
 
+#ifndef SENSOR_H
+#include "sensor.h"
+#endif
+
 #define DEBUG
-#define AVR_GCC
-//#define virtualDev
+//#define AVR_GCC
+#define virtualDev
 
 #ifdef virtualDev
 #include <iostream>
@@ -118,6 +122,27 @@ protected:
 	virtual int read(void) { return (m_dev->read()); }
 	virtual void flush(void) { m_dev->flush(); }
 };
+
 #endif
+
+
+class tatuTester{
+private:
+    LDR ldr;
+    TemperatureSensor temp;
+public:
+
+    //TemperatureSensor temp;
+
+    tatuTester() : ldr(1),temp(2){
+
+        //ldr = new LDR(1);
+    }
+
+    bool get(uint32_t hash, void* response, uint8_t code);
+    bool set(uint32_t hash, uint8_t code, void* request);
+    void publish(char* payload, char* topic);
+};
+
 
 #endif

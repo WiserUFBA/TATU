@@ -1,7 +1,12 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+/*#ifndef debug_h
 #include "debug.h"
+#endif*/
+
+
+#define virtualDev
 
 #ifdef virtualDev
 #define reading 1

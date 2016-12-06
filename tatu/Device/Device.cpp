@@ -325,3 +325,40 @@ int foo(){
 void cpyStrConstant (char* destination, const char* source ){
     strcpy(destination,source);
 }
+
+
+
+/*
+ * tatuTester
+ */
+
+bool tatuTester::get(uint32_t hash, void* response, uint8_t code){
+    debug.println("No gET");
+
+
+    switch (code){
+    case TYPE_CODE_STR:
+        debug.println("STRING");
+        strcpy((char*)response,"1");
+        break;
+    case TYPE_CODE_INT:
+        ldr.handler((int*)response);
+        break;
+    case TYPE_CODE_BOOL:
+        *(bool*)response = true;
+        break;
+    default:
+        return false;
+    }
+
+    return true;
+}
+bool tatuTester::set(uint32_t hash, uint8_t code, void* request){
+    debug.println("No SET");
+    return true;
+}
+void tatuTester::publish(char* payload,char* topic){
+    return;
+}
+
+
