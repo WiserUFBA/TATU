@@ -1,21 +1,30 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+#include "debug.h"
 
+#ifdef virtualDev
+#define reading 1
+#endif
+#ifdef AVR_GCC
+#define reading (digital == true) ? digitalRead(pin) : analogRead(pin)
+#endif
 
 class Sensor{
 public:
     //const char* name;
+    int pin;
+    bool digital;
     Sensor();
-    virtual void handle(char* x) = 0;///< Dispatcher to handle String request
-    virtual void handle(int* x) = 0;///< Dispatcher to handle Integer request
-    virtual void handle(bool* x) = 0;///< Dispatcher to handle Boolean request
+    virtual void handler(char* x) = 0;///< Dispatcher to handle String request
+    virtual void handler(int* x) = 0;///< Dispatcher to handle Integer request
+    virtual void handler(bool* x) = 0;///< Dispatcher to handle Boolean request
 };
 
-class LDR : public Sensor{
+/*class LDR : public Sensor{
 public:
     static const char* name;
-    LDR () {}
+    LDR (int pin) {this->pin = pin;}
     void handle(char* x){
         return;
     }
@@ -27,20 +36,38 @@ public:
         return;
     }
     //LDR () {name = "LDR";}
+};*/
+class LDR : public Sensor{
+public:
+
+    static const char* name;
+    LDR (int pin) {this->pin = pin;}
+
+    void handler(char *x){
+        *x = 0;
+    }
+    void handler(int *x){
+        *x = (4*5*reading);
+    }
+    void handler(bool *x){
+        *x = true;
+    }
 };
+
+
 
 class TemperatureSensor : public Sensor{
 public:
     static const char* name;
-    TemperatureSensor() {}
-    void handle(char* x){
+    TemperatureSensor (int pin) {this->pin = pin;}
+    void handler(char* x){
         return;
     }
-    void handle(int* x){
+    void handler(int* x){
         *x = 1;
         return;
     }
-    void handle(bool* x){
+    void handler(bool* x){
         return;
     }
     //TemperatureSensor() {name = "TemperatureSensor";}

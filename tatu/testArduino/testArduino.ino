@@ -3,8 +3,11 @@
 #include "Device.h"
 
 
-char message[] = "GET BOOL lamp";
+char message[] = "GET INT lamp";
 char device_name[] = "device01";
+
+LDR ldr(1);
+TemperatureSensor temp(2);
 
 bool getSwitch(){
 
@@ -13,14 +16,12 @@ bool getSwitch(){
 bool get(uint32_t hash, void* response, uint8_t code){
     debug.println("No gET");
 
-
     switch (code){
     case TYPE_CODE_STR:
-        debug.println("STRING");
         strcpy((char*)response,"1");
         break;
     case TYPE_CODE_INT:
-        *(int*)response = 1;
+        ldr.handler((int*)response);
         break;
     case TYPE_CODE_BOOL:
         *(bool*)response = true;
@@ -48,7 +49,9 @@ void testDevice(){
     debug.println((int)interpreter.cmd.CODE);
     //debug();
 }
+
 void testSensor(){
+
     //interpreter.parse(message,strlen(message));
     debug.println("LDR:");
     debug.println(LDR::name);
@@ -62,6 +65,7 @@ void setup(){
     Serial.begin(9600);
     delay(1000);
     testDevice();
+
 }
 void loop()
 {
