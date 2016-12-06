@@ -1,5 +1,5 @@
-#ifndef interpreter_h
-#define interpreter_h
+#ifndef Interpreter_h
+#define Interpreter_h
 
 
 // Uncomment the follow line to show debug

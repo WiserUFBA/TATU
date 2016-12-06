@@ -5,20 +5,20 @@
 #include "Interpreter.h"
 #include "debug.h"
 #include <string.h>
-#include <string>
 #include "sensor.h"
 #ifdef AVR_GCC
 #include "Arduino.h"
 #include <avr/wdt.h>
 #endif
 #ifdef virtualDev
+#include <string>
 #include <stdio.h>
 #endif
 
 typedef uint8_t byte;
 
 #ifndef MAX_SIZE_RESPONSE
-#define MAX_SIZE_RESPONSE   768
+#define MAX_SIZE_RESPONSE   256
 #endif
 
 #ifndef MAX_SIZE_OUTPUT
@@ -27,7 +27,7 @@ typedef uint8_t byte;
 
 // System definitions
 #ifdef AVR_GCC
-#define PROGMEM                     __ATTR_PROGMEM__
+#define PROGMEM
 #endif
 #ifdef ESP_GCC
 #define PROGMEM

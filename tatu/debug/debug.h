@@ -2,8 +2,8 @@
 #define debug_h
 
 #define DEBUG
-//#define AVR_GCC
-#define virtualDev
+#define AVR_GCC
+//#define virtualDev
 
 #ifdef virtualDev
 #include <iostream>
@@ -62,9 +62,9 @@ const char CLASS_CONSTRUCTED[]      PROGMEM = "[DEBUG] Class constructed with su
 const char EXEC_ERROR[]             PROGMEM = "[DEBUG] Execution Error!";
 const char EXEC_ERROR_TYPE_VAR[]    PROGMEM = "[DEBUG] Unknown variable type!";
 const char PARAM_ERROR[]            PROGMEM = "[DEBUG] Param Error!";
-const char RESPONSE_TYPE_INFO[]     PROGMEM = "[DEBUG] The response type is INFO";
-const char RESPONSE_TYPE_VALUE[]    PROGMEM = "[DEBUG] The response type is VALUE";
-const char RESPONSE_TYPE_STATE[]    PROGMEM = "[DEBUG] The response type is STATE";
+const char RESPONSE_TYPE_STR[]      PROGMEM = "[DEBUG] The response type is STR";
+const char RESPONSE_TYPE_INT[]      PROGMEM = "[DEBUG] The response type is INT";
+const char RESPONSE_TYPE_BOOL[]     PROGMEM = "[DEBUG] The response type is BOOL";
 const char DOD_RETURN[]             PROGMEM = "[DEBUG] Returning the following DOD Object";
 //#endif
 

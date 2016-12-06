@@ -1,7 +1,7 @@
 #include "Device.h"
 
 #ifdef AVR_GCC
-#define //debugString(VAR) const char VAR[] PROGMEM
+//#define debugString(VAR) const char VAR[] PROGMEM
 #endif
 #ifdef ESP_GCC
 #define //debugString(VAR) const char VAR[] PROGMEM
@@ -218,21 +218,23 @@ void Device::generateBody(char *payload, uint8_t length){
             break;
         case TYPE_CODE_STR:
             QUOTE; strcpy(OUT_STR, buffer); aux+=strlen(buffer); QUOTE;
-            //debugln(RESPONSE_TYPE_INFO);
+            //debug.println(RESPONSE_TYPE_STR);
             break;
         case TYPE_CODE_INT:
             sprintf(buffer,"%d",*(int*)buffer);//change to sprintf
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
-            //debugln(RESPONSE_TYPE_VALUE);
+            //debug.println(RESPONSE_TYPE_INT);
             break;
         case TYPE_CODE_BOOL:
             if ((bool)buffer)  cpyStrConstant(buffer, true_str);
             else cpyStrConstant(buffer, false_str);
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
-            
-            //debugln(RESPONSE_TYPE_STATE);
+            debug.println(RESPONSE_TYPE_BOOL);
+            break;
+        default:
+            //debug.println("Type problem");
             break;
     }
     
