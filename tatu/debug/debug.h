@@ -139,6 +139,8 @@ public:
         //ldr = new LDR(1);
     }
 
+    bool strSolver(uint32_t hash,void* response);
+
     bool get(uint32_t hash, void* response, uint8_t code);
     bool set(uint32_t hash, uint8_t code, void* request);
     void publish(char* payload, char* topic);
