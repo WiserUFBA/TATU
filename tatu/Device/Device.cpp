@@ -129,7 +129,6 @@ void Device::generateBody(char *payload, uint8_t length){
             tatu_flow(&payload[strlen(payload)+1]);
     		break;
         default:
-            debug.println((int)requisition->cmd.CODE);
             debug.println("DEFAULT");
     }
 
@@ -231,7 +230,7 @@ void Device::generateBody(char *payload, uint8_t length){
             else cpyStrConstant(buffer, false_str);
             strcpy(OUT_STR, buffer);
             aux+=strlen(buffer);
-            debug.println(RESPONSE_TYPE_BOOL);
+            //debug.println(RESPONSE_TYPE_BOOL);
             break;
         default:
             //debug.println("Type problem");

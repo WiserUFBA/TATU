@@ -60,14 +60,12 @@ enum typeCode {
 
 ///Functions to handle type
 static uint64_t getString(char *message){
-    debug.println("String");
     return (uint64_t)message;
 }
 static uint64_t getFlow(char *message){
     return getString(message);
 }
 static uint64_t getInteger(char *message){
-    debug.println("Integer");
     return (uint64_t)atoi_T(message);
 }
 static uint64_t getBool(char *message){

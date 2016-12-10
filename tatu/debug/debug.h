@@ -6,8 +6,8 @@
 #endif
 
 #define DEBUG
-//#define AVR_GCC
-#define virtualDev
+#define AVR_GCC
+//#define virtualDev
 
 #ifdef virtualDev
 #include <iostream>
@@ -140,6 +140,7 @@ public:
     }
 
     bool strSolver(uint32_t hash,void* response);
+    bool intSolver(uint32_t hash,void* response);
 
     bool get(uint32_t hash, void* response, uint8_t code);
     bool set(uint32_t hash, uint8_t code, void* request);
@@ -148,3 +149,4 @@ public:
 
 
 #endif
+

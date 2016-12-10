@@ -3,7 +3,7 @@
 #include "Device.h"
 
 
-char message[] = "GET INT lamp";
+char message[] = "GET INT ldr";
 char device_name[] = "device01";
 
 LDR ldr(1);
@@ -13,31 +13,17 @@ bool getSwitch(){
 
 }
 
+tatuTester tester;
+
 bool get(uint32_t hash, void* response, uint8_t code){
-    debug.println("No gET");
-
-    switch (code){
-    case TYPE_CODE_STR:
-        strcpy((char*)response,"1");
-        break;
-    case TYPE_CODE_INT:
-        ldr.handler((int*)response);
-        break;
-    case TYPE_CODE_BOOL:
-        *(bool*)response = true;
-        break;
-    default:
-        return false;
-    }
-
-    return true;
+    return tester.get(hash, response, code);
 }
 bool set(uint32_t hash, uint8_t code, void* request){
-    debug.println("No SET");
-    return true;
-}
-void publish(char* payload, char* topic){
 
+    return tester.set(hash, code, request);
+}
+void publish(char* payload,char* topic){
+    tester.publish(payload,topic);
 }
 Interpreter interpreter;
 Device device(device_name,&interpreter,get,set,publish);

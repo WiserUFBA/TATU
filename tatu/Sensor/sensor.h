@@ -6,12 +6,14 @@
 #endif*/
 
 
-#define virtualDev
+//#define virtualDev
+#define AVR_GCC
 
 #ifdef virtualDev
 #define reading 1
 #endif
 #ifdef AVR_GCC
+#include "Arduino.h"
 #define reading (digital == true) ? digitalRead(pin) : analogRead(pin)
 #endif
 

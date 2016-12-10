@@ -9,13 +9,37 @@ Debug debug(&Serial);
 #endif
 
 /*
+ * DEFINES TEMPORARIOS
+ */
+enum typeCode {
+    TYPE_CODE_DOD,
+    TYPE_CODE_STR,
+    TYPE_CODE_INT,
+    TYPE_CODE_BOOL,
+    TYPE_CODE_FLOW
+};
+
+/*
  * tatuTester
  */
-#define ldr_hash 1
+#define H_ldr 193498023
 #define temp_hash 2
 bool tatuTester::strSolver(uint32_t hash,void* response){
     switch (hash){
-    case ldr_hash:
+    case H_ldr:
+        ldr.handler((int*)response);
+        break;
+    case temp_hash:
+        temp.handler((char*)response);
+        break;
+    default:
+        return false;
+    }
+}
+bool tatuTester::intSolver(uint32_t hash, void *response){
+    switch (hash){
+    case H_ldr:
+        debug.println("Aki!!");
         ldr.handler((int*)response);
         break;
     case temp_hash:
@@ -30,19 +54,19 @@ bool tatuTester::get(uint32_t hash, void* response, uint8_t code){
     debug.println("No gET");
 
 
-    /*switch (code){
+    switch (code){
     case TYPE_CODE_STR:
         strSolver(hash,response);
         break;
     case TYPE_CODE_INT:
-        ldr.handler((int*)response);
+        intSolver(hash,response);
         break;
     case TYPE_CODE_BOOL:
         *(bool*)response = true;
         break;
     default:
         return false;
-    }*/
+    }
 
     return true;
 }

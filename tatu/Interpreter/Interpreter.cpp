@@ -65,8 +65,6 @@ bool Interpreter::parse(char *string, unsigned int length){
     if(cmd.CODE != COMMAND_GET)
         if (!value(string,&next)) return false;
 
-    //cmd.CODE = 3;
-    debug.println((int)cmd.CODE);
     return true;
 }
 
@@ -78,19 +76,15 @@ bool Interpreter::req(char* string,unsigned int* next){
         check if the requisition's first letter belongs to 
         the list of characters of the protocol requisitions
     */
-    for ( i = 0; i < featNumber && (features[i] != string[0]) ; debug.println(i), i++);
+    for ( i = 0; i < featNumber && (features[i] != string[0]) ; i++);
 
     if (i == featNumber){
         return false;
     }
-    //cout << "at least here" << endl;
-    debug.println("at least here1");
-    //debug.println((char)features[i]);
 
     // Insert the request type in the command structure
     cmd.CODE = (uint8_t)i;
-    //debug.println((char)features[i]);
-    debug.println((int)cmd.CODE);
+
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
     debug.println(&string[*next]);
@@ -109,11 +103,8 @@ bool Interpreter::type(char* string,unsigned int* next){
     if (i == dataNumber){
         return false;
     }
-    debug.println("at least here2");
-    //debug.println((char)dataTypes[i]);
 
     cmd.TYPE = (uint8_t)i;
-    debug.println((char)dataTypes[i]);
 
     // Atributtes the size of this part to find the next requisition's string
     *next = nextFunc(string,*next);
@@ -129,11 +120,7 @@ bool Interpreter::id(char* string,unsigned int* next){
 } 
 
 bool Interpreter::value(char* string,unsigned int* next){
-    
-    debug.println("Foi");
     cmd.value = valueParser[cmd.TYPE].valueFunc(&string[*next]);
-    debug.println("Isso");
-    //debug.println((char*)cmd.value);
     return true;
 }
 
