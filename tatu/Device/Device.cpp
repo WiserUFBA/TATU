@@ -35,7 +35,7 @@ Device::Device( const char *name_d, Interpreter *req, bool (*GET_FUNCTION)(uint3
                         bool (*SET_FUNCTION)(uint32_t hash, uint8_t code, void* request), void (*PUBLISH)(char *, char *)){
     get_function = GET_FUNCTION;
     set_function = SET_FUNCTION;
-    pub = PUBLISH;
+    publish = PUBLISH;
     init(name_d,req);
 }
 
@@ -276,7 +276,7 @@ void Device::callback(char *topic, byte *payload, unsigned int length){
     cpyStrConstant(&aux_topic_name[len_name],res_str);
     
     //publish the message
-    pub(aux_topic_name, output_message);
+    publish(aux_topic_name, output_message);
 
     aux_topic_name[len_name] = 0;
 

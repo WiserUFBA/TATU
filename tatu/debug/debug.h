@@ -79,8 +79,10 @@ extern class Debug debug;
 class standardStream{
 public:
 	//standardStream();
-	template <typename T> 
-  	void println(T x){ cout << x << endl;};
+    template <typename T>
+    void println(T x){ cout << x << endl;};
+    template <typename T>
+    void print(T x){ cout << x;};
 
 };
 #endif
@@ -142,14 +144,17 @@ private:
 public:
 
     //TemperatureSensor temp;
+    string tests[10];
 
-    tatuTester() : ldr(1),temp(2){
-
-        //ldr = new LDR(1);
-    }
+    tatuTester() : ldr(1),temp(2){}
 
     bool strSolver(uint32_t hash,void* response);
     bool intSolver(uint32_t hash,void* response);
+
+    /*
+     * Inserts a list of tests coming from a input stream
+     */
+    void inputTests();
 
     /*
      * Function that handle the get requests
@@ -162,9 +167,9 @@ public:
     bool set(uint32_t hash, uint8_t code, void* request);
 
     /*
-     * Interface for the out data
+     * Interface for the out device output
      */
-    void publish(char* payload, char* topic);
+    void publish(char* topic, char* payload);
 };
 
 

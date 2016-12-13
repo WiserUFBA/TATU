@@ -83,7 +83,7 @@ public:
     bool (*get_function)(uint32_t hash, void* response, uint8_t code);
     bool (*set_function)(uint32_t hash, uint8_t type, void* request);
     bool (*flow_function)(uint32_t hash, uint8_t code, void* response);
-    void (*pub)(char *, char *);
+    void (*publish)(char *, char *);
     // Atributos variaveis
     Interpreter *requisition;
 
