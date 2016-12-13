@@ -6,8 +6,8 @@
 #endif*/
 
 
-//#define virtualDev
-#define AVR_GCC
+#define virtualDev
+//#define AVR_GCC
 
 #ifdef virtualDev
 #define reading 1

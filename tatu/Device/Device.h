@@ -69,10 +69,7 @@ typedef uint8_t byte;
 #define BTOS(BOOL1,STRING)      if (BOOL1) strcpy((char*)STRING,"ON"); else strcpy((char*)STRING,"OFF");
 #define BTOB(BOOL1,BOOL2)       *(bool*)BOOL2 = BOOL1
 
-int foo();
 void cpyStrConstant(char* destination, const char* source );
-void error_message(int aux);
-void sucess_message(int aux);
 
 class Device{
 public:
@@ -107,19 +104,37 @@ public:
 
     void init(  const char *name_d, Interpreter *req); 
 
-    //
+    // Little functions used to abstract some simple handling aspects
 	void tatu_get(void* buffer);
 	void tatu_set(void* request);
 	void tatu_flow(void* request);
 
-    void sucess_message(int aux);
-    void error_message(int aux);
-
-    int cpyVar(const char* payload, int aux);
-
     void generateHeader();
     void generateBody(char *payload, uint8_t length);
     void loop();
+private:
+    /*
+     * Apply to the response a default sucess message in case there is no message that
+     * should be returned by the device
+     *
+     * Usually when the request was a SET or FLOW
+     */
+    void sucess_message(int aux);
+    /*
+     * Apply to the response a default error message in case there was a problem in
+     * handling the message request
+     *
+     * In the future a more costumized message should be used
+     */
+    void error_message(int aux);
+    /*
+        Copies the variable of the message that comes in the payload
+        <example>
+            incoming message: GET STATE lamp
+            adds the following json property "lamp":
+        </example>
+    */
+    int cpyVar(const char* payload, int aux);
 };
 
 #endif

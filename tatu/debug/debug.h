@@ -6,8 +6,8 @@
 #endif
 
 #define DEBUG
-#define AVR_GCC
-//#define virtualDev
+//#define AVR_GCC
+#define virtualDev
 
 #ifdef virtualDev
 #include <iostream>
@@ -126,8 +126,17 @@ protected:
 #endif
 
 
+/*
+ * A Virtual tatu device used to test the framework
+ * It's going to be used as model for a Device class
+ */
 class tatuTester{
 private:
+
+    /*
+     * Some sensors objects for the test
+     * Their classes where automatic builded by the autoCode program
+     */
     LDR ldr;
     TemperatureSensor temp;
 public:
@@ -142,8 +151,19 @@ public:
     bool strSolver(uint32_t hash,void* response);
     bool intSolver(uint32_t hash,void* response);
 
+    /*
+     * Function that handle the get requests
+     */
     bool get(uint32_t hash, void* response, uint8_t code);
+
+    /*
+     * Function that handle the set requests
+     */
     bool set(uint32_t hash, uint8_t code, void* request);
+
+    /*
+     * Interface for the out data
+     */
     void publish(char* payload, char* topic);
 };
 

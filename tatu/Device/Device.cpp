@@ -318,9 +318,7 @@ void Device::tatu_set(void* request){
 void Device::tatu_flow(void* request){
     requisition->cmd.ERROR = !flow_function(requisition->str_hash,requisition->cmd.CODE,request);
 }
-int foo(){
-    return 3;
-}
+
 void cpyStrConstant (char* destination, const char* source ){
     strcpy(destination,source);
 }
