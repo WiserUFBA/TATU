@@ -154,7 +154,8 @@ public:
     /*
      * Inserts a list of tests coming from a input stream
      */
-    void inputTests();
+    //void inputTests();
+    void (*inputTests)();
 
     /*
      * Function that handle the get requests

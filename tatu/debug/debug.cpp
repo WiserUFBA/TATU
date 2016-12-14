@@ -23,13 +23,13 @@ enum typeCode {
  * tatuTester
  */
 #define H_ldr 193498023
-#define temp_hash 2
+#define H_temp 2090755995
 bool tatuTester::strSolver(uint32_t hash,void* response){
     switch (hash){
     case H_ldr:
         ldr.handler((int*)response);
         break;
-    case temp_hash:
+    case H_temp:
         temp.handler((char*)response);
         break;
     default:
@@ -42,7 +42,7 @@ bool tatuTester::intSolver(uint32_t hash, void *response){
         debug.println("Aki!!");
         ldr.handler((int*)response);
         break;
-    case temp_hash:
+    case H_temp:
         temp.handler((char*)response);
         break;
     default:
@@ -79,11 +79,11 @@ void tatuTester::publish(char* topic,char* payload){
     return;
 }
 
-void tatuTester::inputTests(){
+/*void tatuTester::inputTests(){
     string line;
     while(getline(cin,line)){
         debug.println(line);
     }
-}
+}*/
 
 
