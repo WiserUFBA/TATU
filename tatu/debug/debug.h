@@ -11,6 +11,7 @@
 
 #ifdef virtualDev
 #include <iostream>
+#include <cstring>
 #endif
 #include <stdint.h>
 using namespace std;
@@ -155,7 +156,7 @@ public:
      * Inserts a list of tests coming from a input stream
      */
     //void inputTests();
-    void (*inputTests)();
+    void inputTests(void (*callback)(char* message));
 
     /*
      * Function that handle the get requests

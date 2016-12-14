@@ -24,6 +24,7 @@ enum typeCode {
  */
 #define H_ldr 193498023
 #define H_temp 2090755995
+
 bool tatuTester::strSolver(uint32_t hash,void* response){
     switch (hash){
     case H_ldr:
@@ -79,11 +80,27 @@ void tatuTester::publish(char* topic,char* payload){
     return;
 }
 
-/*void tatuTester::inputTests(){
+#ifdef virtualDev
+void tatuTester::inputTests(void (*callback)(char* message)){
     string line;
+    char aux[30];
     while(getline(cin,line)){
-        debug.println(line);
+        strcpy(aux, line.c_str());
+        debug.println(aux);
+        callback(aux);
     }
-}*/
-
+}
+#endif
+#ifdef AVR_GCC
+void tatuTester::inputTests(void (*callback)(char* message)){
+    int i;
+    char aux[30];
+    while(Serial.Avaliable()){
+        Serial.read()
+        strcpy(aux, line.c_str());
+        debug.println(aux);
+        callback(aux);
+    }
+}
+#endif
 
